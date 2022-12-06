@@ -11,6 +11,7 @@ class User(object):
 class UserIn(BaseModel):
     email: str
     password: str
+    remember: bool
 
 class UserRegister(BaseModel):
     email: str
