@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Button, Checkbox, Form, Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import logo from "../icon.png";
+import axios from "axios";
 
 const StyledErrorMessage = styled.div``;
 const StyledImage = styled.img`
@@ -12,9 +13,11 @@ const StyledImage = styled.img`
 const LoginCard = (): JSX.Element => {
   const [valid, setValid] = useState(true);
   const navigate = useNavigate();
+  const url = "localhost:8080";
 
-  const onFinish = (values: any) => {
-    if (values.username === "admin" && values.password === "admin") {
+  const onFinish = async (values: any) => {
+    const response = await axios.post(url, values);
+    if (response.status === 200) {
       setValid(true);
       navigate("/panel");
     } else {
@@ -42,8 +45,8 @@ const LoginCard = (): JSX.Element => {
         autoComplete="off"
       >
         <Form.Item
-          label="Username"
-          name="username"
+          label="Email"
+          name="email"
           rules={[{ required: true, message: "Please input your username!" }]}
         >
           <Input />
