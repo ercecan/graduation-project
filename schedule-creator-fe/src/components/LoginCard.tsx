@@ -13,9 +13,10 @@ const StyledImage = styled.img`
 const LoginCard = (): JSX.Element => {
   const [valid, setValid] = useState(true);
   const navigate = useNavigate();
-  const url = "localhost:8080";
+  const url = "http://localhost:8000/api/user/login";
 
   const onFinish = async (values: any) => {
+    console.log(values);
     const response = await axios.post(url, values);
     if (response.status === 200) {
       setValid(true);
