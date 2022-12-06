@@ -2,7 +2,7 @@ from models import User
 import bcrypt
 from config import CONFIG
 
-userDB = {'users': []}
+userDB = {'users': [{'name':'ömer','email':'ömer','password':'hash','student_id':'asdas'}]}
 class UserOperations():
 
     async def create_user(self, user: User):
@@ -12,7 +12,7 @@ class UserOperations():
 
     async def get_user_by_email(self, email: str):
         for user in userDB['users']:
-            if user.email == email:
+            if user['email'] == email:
                 return user
         return None
     
