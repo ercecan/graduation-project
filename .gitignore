@@ -15,4 +15,5 @@ schedule-creator-ms-structure
 */*/secret.yaml
 */.vscode
 */*/node_modules
+.DS_Storenode_modules
 .DS_Store
