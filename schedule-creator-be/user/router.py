@@ -2,7 +2,7 @@ from fastapi import APIRouter, Response, Depends, Body, HTTPException
 from pydantic import EmailStr
 import logging
 from models import User, UserIn, UserRegister
-from config import CONFIG
+
 
 from operations import UserOperations
 
@@ -14,7 +14,7 @@ router = APIRouter(
 
 userOps = UserOperations()
 
-@router.post("/register", response_model=User)
+@router.post("/register", response_model=UserRegister)
 async def register(user: UserRegister):
     user.password = UserOperations.hash_password(user.password)
     user = await userOps.create_user(user)

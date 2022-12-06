@@ -1,9 +1,8 @@
 from models import User
-from app import userDB
 import bcrypt
 from config import CONFIG
 
-
+userDB = {'users': []}
 class UserOperations():
 
     async def create_user(self, user: User):
