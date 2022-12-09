@@ -1,13 +1,13 @@
-import typing
-from fastapi import FastAPI
-from starlette.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
 import logging
+import typing
+
 import router
 from config import CONFIG
-from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from fastapi.responses import JSONResponse
+from starlette.middleware.cors import CORSMiddleware
 
 # if not local environment hide api docs url
 if CONFIG.env != 'local':
@@ -22,6 +22,8 @@ app.add_middleware(
 
 origins = [
     "*",
+    "http://localhost:3000",
+    "http://localhost:3000/*",
 ]
 
 app.add_middleware(

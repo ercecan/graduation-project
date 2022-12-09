@@ -1,10 +1,9 @@
-from fastapi import APIRouter, Response, Depends, Body, HTTPException
-from pydantic import EmailStr
 import logging
+
+from fastapi import APIRouter, Body, Depends, HTTPException, Response
 from models import User, UserIn, UserRegister
-
-
 from operations import UserOperations
+from pydantic import EmailStr
 
 router = APIRouter(
     prefix="/api/user",
@@ -25,7 +24,7 @@ async def register(user: UserRegister):
 async def login_user(user_: UserIn):
     user = await userOps.get_user_by_email(user_.email)
     if user:
-        if UserOperations.verify_password(password=user_['password'], hashed_password=user['password']):
+        if UserOperations.verify_password(password=user_.password, hashed_password=user['password']):
             return Response(status_code=200, content={'Message': 'Login Successful', 'User': user})
         else:
             raise HTTPException(status_code=401, detail="Incorrect password")
