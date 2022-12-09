@@ -18,13 +18,17 @@ const StyledContainer = styled.div`
   top: 25%;
 `;
 
-const LoginCard = (): JSX.Element => {
+const SignupCard = (): JSX.Element => {
   const [valid, setValid] = useState(true);
   const navigate = useNavigate();
-  const url = "http://localhost:8000/api/user/register";
+  const url = "http://localhost:8000/api/user/login";
 
   const onFinish = async (values: any) => {
     console.log(values);
+    // email: str
+    // password: str
+    // name: str
+    // student_id: str
     const response = await axios.post(url, values);
     console.log(response);
     if (response.status === 200) {
@@ -57,7 +61,23 @@ const LoginCard = (): JSX.Element => {
         <Form.Item
           label="Email"
           name="email"
-          rules={[{ required: true, message: "Please input your username!" }]}
+          rules={[{ required: true, message: "Please input your email!" }]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          label="Student ID"
+          name="id"
+          rules={[{ required: true, message: "Please input your student id!" }]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          label="Name"
+          name="name"
+          rules={[{ required: true, message: "Please input your name!" }]}
         >
           <Input />
         </Form.Item>
@@ -80,4 +100,4 @@ const LoginCard = (): JSX.Element => {
   );
 };
 
-export default LoginCard;
+export default SignupCard;
