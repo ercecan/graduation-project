@@ -7,17 +7,26 @@ import axios from "axios";
 
 const StyledErrorMessage = styled.div``;
 const StyledImage = styled.img`
+  margin-left: 120px;
+  padding-bottom: 30px;
   width: 150px;
+`;
+const StyledContainer = styled.div`
+  width: 500px;
+  position: absolute;
+  left: 28%;
+  top: 25%;
 `;
 
 const LoginCard = (): JSX.Element => {
   const [valid, setValid] = useState(true);
   const navigate = useNavigate();
-  const url = "http://localhost:8000/api/user/login";
+  const url = "http://localhost:8000/api/user/register";
 
   const onFinish = async (values: any) => {
     console.log(values);
     const response = await axios.post(url, values);
+    console.log(response);
     if (response.status === 200) {
       setValid(true);
       navigate("/panel");
@@ -31,7 +40,7 @@ const LoginCard = (): JSX.Element => {
   };
 
   return (
-    <div>
+    <StyledContainer>
       <StyledImage src={logo} alt="Logo" />
       <StyledErrorMessage>
         {!valid && <p>Please try again</p>}
@@ -61,21 +70,13 @@ const LoginCard = (): JSX.Element => {
           <Input.Password />
         </Form.Item>
 
-        <Form.Item
-          name="remember"
-          valuePropName="checked"
-          wrapperCol={{ offset: 8, span: 16 }}
-        >
-          <Checkbox>Remember me</Checkbox>
-        </Form.Item>
-
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <Button type="primary" htmlType="submit">
             Submit
           </Button>
         </Form.Item>
       </Form>
-    </div>
+    </StyledContainer>
   );
 };
 
