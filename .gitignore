@@ -1,0 +1,7 @@
+csp/venv/
+schedule-creator-be/user/venv
+schedule-creator-fe/node_modules
+.idea/
+__pycache__/
+.DS_Store
+schedule_creator_common.egg-info/

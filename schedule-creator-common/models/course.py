@@ -1,10 +1,13 @@
-from beanie import Document, Indexed
-from pydantic import BaseModel
 from typing import List, Optional
-from .time import TimeSlot, Term
-from enums.semesters import Semesters
+
+from beanie import Document, Indexed
 from enums.languages import Languages
+from enums.semesters import Semesters
+from pydantic import BaseModel
+
 from .classroom import Classroom
+from .time import Term, TimeSlot
+
 
 class Course(BaseModel):
     name: str
@@ -25,13 +28,12 @@ class TakenCourse(Course):
     grade: str
     term: Term
 
-class OpenedCourse(Course, Document):
-    time_slot: TimeSlot
+class OpenedCourse(Course):
+    # time_slot: TimeSlot
     classroom: Optional[Classroom] = None
 
     class Collection:
         name = "opened_courses"
-        Indexes = [
-            Indexed(keys=["code"], unique=True),
-            Indexed(keys=["crn"], unique=True),
-        ]
+    
+    def __hash__(self):
+        return 3*self.ects**3 + 2*self.ects**2 - 5

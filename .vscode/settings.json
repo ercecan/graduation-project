@@ -1,0 +1,4 @@
+{
+  "python.analysis.extraPaths": ["./schedule-creator-common"],
+  "git.ignoreLimitWarning": true
+}

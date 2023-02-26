@@ -1,6 +1,7 @@
 from enum import Enum
 
-class Semesters(Enum, str):
+
+class Semesters(Enum):
     FALL = 'fall'
     SPRING = 'spring'
     SUMMER = 'summer'

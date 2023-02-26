@@ -1,5 +1,6 @@
 from enum import Enum
 
-class Languages(Enum, str):
+
+class Languages(Enum):
     ENGLISH = 'english'
     TURKISH = 'turkish'

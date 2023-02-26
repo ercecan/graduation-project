@@ -1,12 +1,16 @@
-from typing import Optional, Any, List
-from beanie import Document, Indexed
-from major import Major
-from course import TakenCourse, Course
-from school import School
-from schedule import Schedule
-from enums.student_types import StudentTypes
+from typing import Any, List, Optional
 
-class Student(Document):
+from beanie import Document, Indexed
+from enums.student_types import StudentTypes
+from pydantic import BaseModel
+
+from .course import Course, TakenCourse
+from .major import Major
+from .schedule import Schedule
+from .school import School
+
+
+class Student(BaseModel):
     name: str
     surname: str
     student_id: str
@@ -25,6 +29,3 @@ class Student(Document):
 
     class Collection:
         name = "students"
-        Indexes = [
-            Indexed(keys=["email"], unique=True),
-        ]

@@ -1,6 +1,9 @@
-from typing import Optional, List
+from typing import List, Optional
+
 from beanie import Document
-from major import Major
+
+from .major import Major
+
 
 class School(Document):
     name: str
