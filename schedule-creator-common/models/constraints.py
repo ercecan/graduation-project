@@ -27,39 +27,46 @@ D = TypeVar('D') # domain type
 
 # Base class for all constraints
 class Constraint(Generic[V, D], ABC):
-    # The variables that the constraint is between
     def __init__(self, variables: List[V]) -> None:
         self.variables = variables
 
-    # Must be overridden by subclasses
     @abstractmethod
     def satisfied(self, *args) -> bool:
          ...
 
-class TimeSlotConstraint(Constraint):
-    def __init__(self, weight: int = 100, is_hard: bool = True) -> None:
-        super().__init__(weight, is_hard)
+class TimeSlotConstraint(Constraint[OpenedCourse, bool]):
+    def __init__(self, variables) -> None:
+        super().__init__(variables=variables)
 
-    def satisfied(self, new_course: OpenedCourse, assigneds: List[OpenedCourse]) -> bool:
-        for assigned in assigneds:
-            if assigned.time_slot.is_overlap(new_course.time_slot):
+    def satisfied(self, assigned_courses: List[OpenedCourse], student: Student) -> bool:
+        if len(assigned_courses) == 0:
+            return True
+        
+        last_course = list(assigned_courses.keys())[-1]
+        courses = list(assigned_courses.keys())[:-1]
+        for course in courses:
+            if course.time_slot.is_overlap(last_course.time_slot):
                 return False
         return True
 
     def get_cost(self, *args) -> int:
         ...
 
-class PrereqConstraint(Constraint):
-    def __init__(self, weight: int = 100, is_hard: bool = True) -> None:
-        super().__init__(weight, is_hard)
+class PrereqConstraint(Constraint[OpenedCourse, bool]):
+    def __init__(self, variables) -> None:
+        super().__init__(variables)
 
-    def satisfied(self, new_course: OpenedCourse, taken_courses: List[TakenCourse]) -> bool:
-        if new_course.prereqs == None:
+    def satisfied(self, assigned_courses: List[OpenedCourse], student: Student) -> bool:
+        if len(assigned_courses) == 0:
+            return True
+        last_course = list(assigned_courses.keys())[-1]
+        courses = list(assigned_courses.keys())[:-1]
+        if last_course.prereqs == None:
             return True
         
-        for prereq in new_course.prereqs:
-            for taken_course in taken_courses:
-                if prereq == taken_course.code and taken_course.grade <= "DD":
+        for prereq in last_course.prereqs:
+            for course in courses:
+                if prereq == course.code and course.grade <= "DD":
                     return True
         return False
 
@@ -78,6 +85,7 @@ class YearConstraint(Constraint[OpenedCourse, bool]):
         if years == None:
             return True
         return student.year in years
+    
     def get_cost(self, *args) -> int:
         ...
 
