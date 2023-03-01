@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transcript-reader
+  labels:
+    app: transcript-reader
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: transcript-reader
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 8
+  template:
+    metadata:
+      labels:
+        app: transcript-reader
+    spec:
+      containers:
+        - name: transcript-reader
+          image: ercecan/transcript-reader
+          envFrom:
+            - configMapRef:
+                name: transcript-reader-configmap
+            - secretRef:
+                name: transcript-reader-secret

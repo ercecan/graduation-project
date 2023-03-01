@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: transcript-reader-configmap
+data:
+  TRANSCRIPT_QUEUE: "transcript"
+  SCHEDULER_QUEUE: "scheduler"

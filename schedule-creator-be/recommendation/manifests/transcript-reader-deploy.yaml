@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recommendation
+  labels:
+    app: recommendation
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: recommendation
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 4
+  template:
+    metadata:
+      labels:
+        app: recommendation
+    spec:
+      containers:
+        - name: recommendation
+          image: ercecan/recommendation
+          envFrom:
+            - configMapRef:
+                name: recommendation-configmap
+            - secretRef:
+                name: recommendation-secret

@@ -1,0 +1,1 @@
+rabbitmq will be a stateful set not a deployment, because we want the messages to stay persistent even if the pods crashes

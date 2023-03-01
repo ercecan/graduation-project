@@ -1,0 +1,13 @@
+service is a group of pods
+
+ingress consists of load balancer and a set of rules saying which request goes where, access to the gateway
+
+minikube addons enable ingress
+
+for updating cluster:
+
+* docker build .
+* docker tag <sha256> ercecan/pod:latest
+* docker push ercecan/pod:latest
+* kubectl delete -f manifests/
+* kubectl apply -f manifests/

@@ -1,0 +1,9 @@
+kubectl apply -f ./ --> in manifests directory
+(only applies to files that have changed)
+results in =>
+"""
+deployment.apps/auth created
+configmap/auth-configmap created
+secret/auth-secret created
+service/auth unchanged
+"""
