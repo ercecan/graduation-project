@@ -2,13 +2,13 @@ from typing import List, Optional
 
 from beanie import Document
 
-from .major import Major
+from .major import MajorPlan
 
 
 class School(Document):
     name: str
     download_link: Optional[str] = None
-    majors: Optional[List[Major]] = None
+    majors: Optional[List[MajorPlan]] = None
 
     class Collection:
         name = "schools"

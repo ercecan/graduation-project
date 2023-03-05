@@ -3,8 +3,14 @@ from typing import Dict, Generic, List, Optional, TypeVar
 
 from models.major import Major
 from models.student import Student
+from models.course import TakenCourse
+from models.time import Term
+from enums.grades import Grades
+from enums.semesters import Semesters
 
-student_mock = Student(name="erce", surname="bekture", major=[Major(name="CMPE", code="BLG", language="EN")], student_id="150180009", email="can18@itu.edu.tr", password="123", gpa="3.52", year=3)
+courseOOP = TakenCourse(name="OOP", code="418", major_restrictions=["BLG"],crn="20202", ects=12, credits=5, grade=Grades.DD, term=Term(year=2019, semester=Semesters.SPRING))
+
+student_mock = Student(name="erce", surname="bekture", major=[Major(name="CMPE", code="BLG", language="EN")], student_id="150180009", email="can18@itu.edu.tr", password="123", gpa="3.52", year=3, taken_courses=[courseOOP])
 
 V = TypeVar('V') # variable type
 D = TypeVar('D') # domain type
@@ -45,7 +51,6 @@ class CSP(Generic[V, D]):
     def consistent(self, assignments: Dict[V, D], student: Student = student_mock) -> bool:
         for constraint in self.constraints:
             if not constraint.satisfied({k: v for k, v in assignments.items() if v}, student):
-                print(assignments, 3*"\n")
                 return False
         return True
 
