@@ -1,11 +1,10 @@
 from abc import ABC, abstractmethod
-from ast import Dict
 from typing import Generic, List, TypeVar
 
 from models.student import Student
 from enums.grades import Grades
 
-from .course import OpenedCourse, TakenCourse
+from .course import OpenedCourse
 
 V = TypeVar('V') # variable type
 D = TypeVar('D') # domain type
