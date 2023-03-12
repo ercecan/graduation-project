@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import List
 
 from pydantic import BaseModel
 
@@ -9,4 +9,7 @@ class Major(BaseModel):
     name: str
     code: str
     language: str
-    # courses: List[Course]
+
+class MajorPlan(Major):
+    courses: List[Course] = None
+    total_credits: int = 0

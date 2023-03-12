@@ -3,6 +3,8 @@ from typing import List, Optional
 from beanie import Document, Indexed
 from enums.languages import Languages
 from enums.semesters import Semesters
+from enums.grades import Grades
+from enums.teaching_methods import TeachingMethods
 from pydantic import BaseModel
 
 from .classroom import Classroom
@@ -25,12 +27,15 @@ class Course(BaseModel):
     is_elective: Optional[bool] = False
 
 class TakenCourse(Course):
-    grade: str
+    grade: Grades
     term: Term
 
 class OpenedCourse(Course):
-    # time_slot: TimeSlot
+    time_slot: List[TimeSlot]
     classroom: Optional[Classroom] = None
+    capacity: Optional[int] = 0
+    teaching_method: Optional[TeachingMethods] = TeachingMethods.ONSITE
+    
 
     class Collection:
         name = "opened_courses"
