@@ -1,9 +1,9 @@
 from typing import List, Optional
 
 from beanie import Document, Indexed
+from enums.grades import Grades
 from enums.languages import Languages
 from enums.semesters import Semesters
-from enums.grades import Grades
 from enums.teaching_methods import TeachingMethods
 from pydantic import BaseModel
 

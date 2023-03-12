@@ -1,16 +1,17 @@
 from abc import ABC, abstractmethod
 from typing import Dict, Generic, List, Optional, TypeVar
 
-from models.major import Major
-from models.student import Student
-from models.course import TakenCourse
-from models.time import Term
 from enums.grades import Grades
 from enums.semesters import Semesters
+from models.course import TakenCourse
+from models.major import Major
+from models.student import Student
+from models.time import Term
 
 courseOOP = TakenCourse(name="OOP", code="418", major_restrictions=["BLG"],crn="20202", ects=12, credits=5, grade=Grades.DD, term=Term(year=2019, semester=Semesters.SPRING))
 
-student_mock = Student(name="erce", surname="bekture", major=[Major(name="CMPE", code="BLG", language="EN")], student_id="150180009", email="can18@itu.edu.tr", password="123", gpa="3.52", year=3, taken_courses=[courseOOP])
+student_mock = Student(name="erce", surname="bekture", major=[Major(name="CMPE", code="BLG", language="EN")], 
+                       student_id="150180009", email="can18@itu.edu.tr", password="123", gpa="3.52", year=3, taken_courses=[])
 
 V = TypeVar('V') # variable type
 D = TypeVar('D') # domain type
@@ -72,5 +73,18 @@ class CSP(Generic[V, D]):
                 result: Optional[Dict[V, D]] = self.backtracking_search(local_assignment)
                 # if we didn't find the result, we will end up backtracking
                 if result is not None:
-                    self.answer.append(result)
+                    self.answer.append(result) 
         return None
+
+    def get_all_possible_schedules(self):
+        all_schedules = []
+        if len(self.answer) == 0:
+            print("No solution found!") # Exception
+        else:
+            for ans in self.answer:
+                schedule = []
+                for course in ans:
+                    if ans[course] == True:
+                        schedule.append(course)
+                all_schedules.append((schedule, 0))
+        return all_schedules

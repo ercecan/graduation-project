@@ -1,12 +1,13 @@
 from abc import ABC, abstractmethod
-from typing import List
 from datetime import datetime
+from typing import List
 
-from models.student import Student
-from enums.grades import Grades
 from enums.days import Days
+from enums.grades import Grades
+from models.student import Student
 
 from .course import OpenedCourse
+
 
 # Base class for all constraints
 class Preference(ABC):

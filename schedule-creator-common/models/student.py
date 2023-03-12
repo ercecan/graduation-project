@@ -18,7 +18,7 @@ class Student(BaseModel):
     password: str
     gpa: Optional[float] = 0.0
     remaining_courses: Optional[Course] = None
-    taken_courses: Optional[List[TakenCourse]] = None
+    taken_courses: Optional[List[TakenCourse]] = None # Dictionary olursa, O(1) search
     taken_credits: Optional[int] = 0
     remaining_credits: Optional[int] = 0
     school: Optional[School] = None
@@ -29,3 +29,5 @@ class Student(BaseModel):
 
     class Collection:
         name = "students"
+
+#isAvailable eklenebilir
