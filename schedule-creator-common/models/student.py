@@ -2,6 +2,7 @@ from typing import Any, List, Optional
 
 from beanie import Document, Indexed
 from enums.student_types import StudentTypes
+from enums.course_tags import Tags
 from pydantic import BaseModel
 
 from .course import Course, TakenCourse
@@ -21,6 +22,7 @@ class Student(BaseModel):
     taken_courses: Optional[List[TakenCourse]] = None
     taken_credits: Optional[int] = 0
     remaining_credits: Optional[int] = 0
+    remaining_tags = Optional[dict] = {tag: 0 for tag in Tags}
     school: Optional[School] = None
     major: List[Major] = None
     schedules: Optional[Schedule] = None

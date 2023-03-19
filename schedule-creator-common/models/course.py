@@ -5,6 +5,7 @@ from enums.languages import Languages
 from enums.semesters import Semesters
 from enums.grades import Grades
 from enums.teaching_methods import TeachingMethods
+from enums.course_tags import Tags
 from pydantic import BaseModel
 
 from .classroom import Classroom
@@ -25,12 +26,15 @@ class Course(BaseModel):
     semester: Optional[Semesters] = None
     instructor: Optional[str] = None
     is_elective: Optional[bool] = False
+    tag: Optional[Tags] = None
 
-class TakenCourse(Course):
+class TakenCourse:
+    course: Course
     grade: Grades
     term: Term
 
-class OpenedCourse(Course):
+class OpenedCourse:
+    course: Course
     time_slot: List[TimeSlot]
     classroom: Optional[Classroom] = None
     capacity: Optional[int] = 0

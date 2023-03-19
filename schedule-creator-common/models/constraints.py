@@ -44,10 +44,10 @@ class PrerequisitiesConstraint(Constraint[OpenedCourse, bool]):
         if len(assigned_courses) == 0:
             return True
         last_course = list(assigned_courses.keys())[-1]
-        if last_course.prereqs == None:
+        if last_course.course.prereqs == None:
             return True
         
-        for prereq in last_course.prereqs:
+        for prereq in last_course.course.prereqs:
             for course in student.taken_courses:
                 if prereq == course.code and course.grade <= Grades.DD:
                     return True
@@ -61,7 +61,7 @@ class YearConstraint(Constraint[OpenedCourse, bool]):
         if len(assigned_courses) == 0:
             return False
         
-        years = list(assigned_courses.keys())[-1].year_restrictions
+        years = list(assigned_courses.keys())[-1].course.year_restrictions
         if years == None:
             return True
         return student.year in years
@@ -76,10 +76,10 @@ class MajorConstraint(Constraint[OpenedCourse, bool]):
 
         last_course = list(assigned_courses.keys())[-1]
 
-        if last_course.major_restrictions == None:
+        if last_course.course.major_restrictions == None:
             return True
         
-        for major_restriction in last_course.major_restrictions:
+        for major_restriction in last_course.course.major_restrictions:
             if major_restriction not in [major.code for major in student.major]:
                 return False
         return True
@@ -93,6 +93,6 @@ class CapacityConstraint(Constraint[OpenedCourse, bool]):
             return True
         
         last_course = list(assigned_courses.keys())[-1]
-        if last_course.capacity == 0:
+        if last_course.course.capacity == 0:
             return False
         return True
