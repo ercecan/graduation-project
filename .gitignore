@@ -1,5 +1,4 @@
-csp/venv/
-schedule-creator-be/user/venv
+**/venv/
 schedule-creator-fe/node_modules
 .idea/
 __pycache__/

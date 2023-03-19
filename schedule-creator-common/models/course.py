@@ -24,9 +24,11 @@ class Course(BaseModel):
     year_restrictions: Optional[List[int]] = None
     description: Optional[str] = None
     semester: Optional[Semesters] = None
+    recommended_semester: Optional[int] = None
     instructor: Optional[str] = None
     is_elective: Optional[bool] = False
     tag: Optional[Tags] = None
+    
 
 class TakenCourse:
     course: Course
@@ -46,3 +48,7 @@ class OpenedCourse:
     
     def __hash__(self):
         return 3*self.ects**3 + 2*self.ects**2 - 5
+    
+class FuturePlan:
+    course: Course
+    term: Term
