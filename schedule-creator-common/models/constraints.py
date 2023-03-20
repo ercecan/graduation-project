@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Generic, List, TypeVar
 
-from models.student import Student
 from enums.grades import Grades
+from models.student import Student
 
 from .course import OpenedCourse
 
@@ -59,7 +59,7 @@ class YearConstraint(Constraint[OpenedCourse, bool]):
 
     def satisfied(self, assigned_courses: List[OpenedCourse], student: Student) -> bool:
         if len(assigned_courses) == 0:
-            return False
+            return True
         
         years = list(assigned_courses.keys())[-1].course.year_restrictions
         if years == None:
@@ -72,7 +72,7 @@ class MajorConstraint(Constraint[OpenedCourse, bool]):
 
     def satisfied(self, assigned_courses: List[OpenedCourse], student: Student) -> bool:
         if len(assigned_courses) == 0:
-            return False
+            return True
 
         last_course = list(assigned_courses.keys())[-1]
 
