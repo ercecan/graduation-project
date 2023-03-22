@@ -1,11 +1,11 @@
 from typing import List, Optional
 
 from beanie import Document, Indexed
+from enums.course_tags import Tags
 from enums.grades import Grades
 from enums.languages import Languages
 from enums.semesters import Semesters
 from enums.teaching_methods import TeachingMethods
-from enums.course_tags import Tags
 from pydantic import BaseModel
 
 from .classroom import Classroom
@@ -29,6 +29,8 @@ class Course(BaseModel):
     is_elective: Optional[bool] = False
     tag: Optional[Tags] = None
     
+    def __hash__(self):
+        return 3*self.ects**7 + 2*self.ects**2 - 5
 
 class TakenCourse(BaseModel):
     course: Course
@@ -47,7 +49,7 @@ class OpenedCourse(BaseModel):
         name = "opened_courses"
     
     def __hash__(self):
-        return 3*self.ects**3 + 2*self.ects**2 - 5
+        return 3*self.course.ects**3 + 2*self.course.ects**2 - 5
     
 class FuturePlan(BaseModel):
     course: Course
