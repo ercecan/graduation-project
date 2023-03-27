@@ -1,16 +1,13 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import List
+from pydantic import BaseModel
 
 from enums.days import Days
-from enums.grades import Grades
-from models.student import Student
 
 from .course import OpenedCourse
 
-
-# Base class for all constraints
-class Preference(ABC):
+class Preference(ABC, BaseModel):
     @abstractmethod
     def __init__(self) -> None:
         ...

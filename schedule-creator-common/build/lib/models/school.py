@@ -10,5 +10,5 @@ class School(Document):
     download_link: Optional[str] = None
     majors: Optional[List[MajorPlan]] = None
 
-    class Collection:
+    class Settings:
         name = "schools"

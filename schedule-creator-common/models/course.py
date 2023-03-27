@@ -6,13 +6,13 @@ from enums.grades import Grades
 from enums.languages import Languages
 from enums.semesters import Semesters
 from enums.teaching_methods import TeachingMethods
-from pydantic import BaseModel
+from pydantic import BaseModel, ObjectId
 
 from .classroom import Classroom
 from .time import Term, TimeSlot
 
 
-class Course(BaseModel):
+class Course(Document):
     name: str
     code: str
     crn: str
@@ -31,26 +31,29 @@ class Course(BaseModel):
     
     def __hash__(self):
         return 3*self.ects**7 + 2*self.ects**2 - 5
+    
+    class Settings:
+        name = "courses"
 
 class TakenCourse(BaseModel):
-    course: Course
+    course_id: str
     grade: Grades
     term: Term
 
-class OpenedCourse(BaseModel):
-    course: Course
+class OpenedCourse(Document, BaseModel):
+    course_id: str
     time_slot: List[TimeSlot]
     classroom: Optional[Classroom] = None
     capacity: Optional[int] = 0
     teaching_method: Optional[TeachingMethods] = TeachingMethods.ONSITE
     
 
-    class Collection:
+    class Settings:
         name = "opened_courses"
     
     def __hash__(self):
         return 3*self.course.ects**3 + 2*self.course.ects**2 - 5
     
 class FuturePlan(BaseModel):
-    course: Course
+    course_id: str
     term: Term

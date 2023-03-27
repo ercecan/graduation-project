@@ -1,15 +1,12 @@
 from typing import List
-
 from pydantic import BaseModel
-
-from .course import Course
-
+from enums.languages import Languages
 
 class Major(BaseModel):
     name: str
     code: str
-    language: str
+    language: Languages
 
 class MajorPlan(Major):
-    courses: List[Course] = None
+    course_ids: List[str] = None
     total_credits: int = 0

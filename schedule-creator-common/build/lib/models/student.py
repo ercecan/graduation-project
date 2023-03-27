@@ -11,25 +11,24 @@ from .schedule import Schedule
 from .school import School
 
 
-class Student(BaseModel):
+class Student(Document):
     name: str
     surname: str
     student_id: str
     email: str
     password: str
     gpa: Optional[float] = 0.0
-    remaining_courses: Optional[Course] = None
+    remaining_courses: Optional[List[str]] = None
     taken_courses: Optional[List[TakenCourse]] = None # Dictionary olursa, O(1) search
     taken_credits: Optional[int] = 0
     remaining_credits: Optional[int] = 0
     remaining_tags: Optional[dict] = {tag: 0 for tag in Tags}
-    school: Optional[School] = None
+    school_id: Optional[str] = None
     major: List[Major] = None
-    schedules: Optional[Schedule] = None
     year: Optional[int] = 0
     student_type: Optional[StudentTypes] = StudentTypes.BACHELOR
 
-    class Collection:
+    class Settings:
         name = "students"
 
 #isAvailable eklenebilir
