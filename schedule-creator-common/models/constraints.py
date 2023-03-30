@@ -49,7 +49,7 @@ class PrerequisitiesConstraint(Constraint[OpenedCourse, bool]):
         
         for prereq in last_course.course.prereqs:
             for course in student.taken_courses:
-                if prereq == course.code and course.grade <= Grades.DD:
+                if prereq == course.course.code and course.grade <= Grades.DD:
                     return True
         return False
 
@@ -60,7 +60,7 @@ class YearConstraint(Constraint[OpenedCourse, bool]):
     def satisfied(self, assigned_courses: List[OpenedCourse], student: Student) -> bool:
         if len(assigned_courses) == 0:
             return True
-        
+
         years = list(assigned_courses.keys())[-1].course.year_restrictions
         if years == None:
             return True

@@ -1,8 +1,11 @@
 from __future__ import annotations
-from pydantic import BaseModel
+
+from datetime import datetime
+
 from enums.days import Days
 from enums.semesters import Semesters
-from datetime import datetime
+from pydantic import BaseModel
+
 
 class TimeSlot(BaseModel):
     day: Days

@@ -11,7 +11,7 @@ setuptools.setup(
     description='Common Package of Schedule Creator Graduation Project',
     url='#',
     license='MIT',
-    packages=['models', 'enums'],
+    packages=['models', 'enums', 'services', 'dtos'],
     install_requires=required,
     zip_safe=False
 )
