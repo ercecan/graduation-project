@@ -1,4 +1,5 @@
-from models import Student
+from models.student import Student
+from models.course import Course
 from bson import ObjectId
 from typing import List
 from dtos.course_dto import TakenCourseDto
@@ -8,6 +9,7 @@ class StudentDBService:
 
     def __init__(self):
         self.db = Student
+        self.course_db_service = CourseDBService()
 
     async def get_student_by_student_id(self, student_id: str) -> Student:
         return await self.db.find_one(Student.student_id == student_id)
@@ -36,6 +38,15 @@ class StudentDBService:
     
     async def get_taken_courses(self, student_id: str) -> List[TakenCourseDto]:
         student = await self.get_student_by_id(student_id)
-        ids = [ObjectId(course_id) for course_id in student.taken_courses]
-        taken_courses = CourseDBService().get_courses_by_ids(ids)
+        ids = [ObjectId(taken.course_id) for taken in student.taken_courses]
+        courses =  self.course_db_service.get_courses_by_ids(ids)
+        taken_courses = []
+        for taken in student.taken_courses:
+            for course in courses:
+                if course.id == taken.course_id:
+                    taken_courses.append(TakenCourseDto(id=taken.id, course=course, grade=taken.grade, term=taken.term))
         return taken_courses
+    
+    async def get_remaining_courses_ids(self, student_id: str) -> List[Course]:
+        student = await self.get_student_by_id(student_id)
+        return student.remaining_courses

@@ -7,8 +7,9 @@ from beanie import Document
 
 class Schedule(Document):
     name: str
-    courses: Optional[List[OpenedCourse]] = None
+    courses: Optional[List[str]] = None
     term: Optional[Term] = None
+    score: Optional[int] = None
     future_plan: Optional[List[FuturePlan]] = None
     preferences: Optional[List[Preference]] = None
     student_id: Optional[str] = None

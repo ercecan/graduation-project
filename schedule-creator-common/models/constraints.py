@@ -4,25 +4,21 @@ from typing import Generic, List, TypeVar
 from enums.grades import Grades
 from models.student import Student
 
-from .course import OpenedCourse
+from dtos.course_dto import OpenedCourseSearchDto
 
 V = TypeVar('V') # variable type
 D = TypeVar('D') # domain type
 
 # Base class for all constraints
 class Constraint(Generic[V, D], ABC):
-    def __init__(self, variables: List[V]) -> None:
-        self.variables = variables
 
     @abstractmethod
     def satisfied(self, *args) -> bool:
          ...
 
-class TimeSlotConstraint(Constraint[OpenedCourse, bool]):
-    def __init__(self, variables) -> None:
-        super().__init__(variables=variables)
+class TimeSlotConstraint(Constraint[OpenedCourseSearchDto, bool]):
 
-    def satisfied(self, assigned_courses: List[OpenedCourse], student: Student) -> bool:
+    def satisfied(self, assigned_courses: List[OpenedCourseSearchDto], student: Student) -> bool:
         if len(assigned_courses) == 0 or len(assigned_courses) == 1:
             return True
         
@@ -36,11 +32,9 @@ class TimeSlotConstraint(Constraint[OpenedCourse, bool]):
                         return False
         return True
 
-class PrerequisitiesConstraint(Constraint[OpenedCourse, bool]):
-    def __init__(self, variables) -> None:
-        super().__init__(variables)
+class PrerequisitiesConstraint(Constraint[OpenedCourseSearchDto, bool]):
 
-    def satisfied(self, assigned_courses: List[OpenedCourse], student: Student) -> bool:
+    def satisfied(self, assigned_courses: List[OpenedCourseSearchDto], student: Student) -> bool:
         if len(assigned_courses) == 0:
             return True
         last_course = list(assigned_courses.keys())[-1]
@@ -53,11 +47,8 @@ class PrerequisitiesConstraint(Constraint[OpenedCourse, bool]):
                     return True
         return False
 
-class YearConstraint(Constraint[OpenedCourse, bool]):
-    def __init__(self, variables) -> None:
-        super().__init__(variables=variables)
-
-    def satisfied(self, assigned_courses: List[OpenedCourse], student: Student) -> bool:
+class YearConstraint(Constraint[OpenedCourseSearchDto, bool]):
+    def satisfied(self, assigned_courses: List[OpenedCourseSearchDto], student: Student) -> bool:
         if len(assigned_courses) == 0:
             return True
 
@@ -66,11 +57,8 @@ class YearConstraint(Constraint[OpenedCourse, bool]):
             return True
         return student.year in years
 
-class MajorConstraint(Constraint[OpenedCourse, bool]):
-    def __init__(self, variables) -> None:
-        super().__init__(variables=variables)
-
-    def satisfied(self, assigned_courses: List[OpenedCourse], student: Student) -> bool:
+class MajorConstraint(Constraint[OpenedCourseSearchDto, bool]):
+    def satisfied(self, assigned_courses: List[OpenedCourseSearchDto], student: Student) -> bool:
         if len(assigned_courses) == 0:
             return True
 
@@ -84,11 +72,9 @@ class MajorConstraint(Constraint[OpenedCourse, bool]):
                 return False
         return True
 
-class CapacityConstraint(Constraint[OpenedCourse, bool]):
-    def __init__(self, variables) -> None:
-        super().__init__(variables=variables)
+class CapacityConstraint(Constraint[OpenedCourseSearchDto, bool]):
 
-    def satisfied(self, assigned_courses: List[OpenedCourse], student: Student) -> bool:
+    def satisfied(self, assigned_courses: List[OpenedCourseSearchDto], student: Student) -> bool:
         if len(assigned_courses) == 0:
             return True
         

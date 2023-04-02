@@ -1,12 +1,12 @@
 from typing import List, Optional
 
-from beanie import Document, Indexed
+from beanie import Document
 from enums.course_tags import Tags
 from enums.grades import Grades
 from enums.languages import Languages
 from enums.semesters import Semesters
 from enums.teaching_methods import TeachingMethods
-from pydantic import BaseModel, ObjectId
+from pydantic import BaseModel
 
 from .classroom import Classroom
 from .time import Term, TimeSlot
@@ -42,6 +42,7 @@ class TakenCourse(BaseModel):
 
 class OpenedCourse(Document, BaseModel):
     course_id: str
+    term: Term
     time_slot: List[TimeSlot]
     classroom: Optional[Classroom] = None
     capacity: Optional[int] = 0

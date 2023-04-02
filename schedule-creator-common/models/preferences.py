@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 from enums.days import Days
 
-from .course import OpenedCourse
+from dtos.course_dto import OpenedCourseSearchDto
 
 class Preference(ABC, BaseModel):
     @abstractmethod
@@ -22,7 +22,7 @@ class DayPreference(Preference):
         self.priority = priority
         self.day = day
 
-    def calculate_score(self, assigned_courses: List[OpenedCourse]) -> int:
+    def calculate_score(self, assigned_courses: List[OpenedCourseSearchDto]) -> int:
         if len(assigned_courses) == 0:
             return 0
         score = 0
@@ -37,7 +37,7 @@ class TimePreference(Preference):
         self.priority = priority
         self.start_time = datetime.strptime(start_time, "%H:%M")
 
-    def calculate_score(self, assigned_courses: List[OpenedCourse]) -> int:
+    def calculate_score(self, assigned_courses: List[OpenedCourseSearchDto]) -> int:
         if len(assigned_courses) == 0:
             return 0
         start_times = [datetime.strptime(time_slot.start_time, "%H:%M") for course in assigned_courses for time_slot in course.time_slot]
@@ -52,7 +52,7 @@ class InstructorPreference(Preference):
         self.priority = priority
         self.instructor = instructor
 
-    def calculate_score(self, assigned_courses: List[OpenedCourse]) -> int:
+    def calculate_score(self, assigned_courses: List[OpenedCourseSearchDto]) -> int:
         if len(assigned_courses) == 0:
             return 0
         score = 0

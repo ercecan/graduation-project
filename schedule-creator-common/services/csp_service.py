@@ -1,24 +1,10 @@
 from abc import ABC, abstractmethod
 from typing import Dict, Generic, List, Optional, TypeVar
-
-from data import student_mock1, student_mock2
 from models.student import Student
+from models.constraints import Constraint
 
 V = TypeVar('V') # variable type
 D = TypeVar('D') # domain type
-  
-  
-# Base class for all constraints
-class Constraint(Generic[V, D], ABC):
-    # The variables that the constraint is between
-    def __init__(self, variables: List[V]) -> None:
-        self.variables = variables
-
-    # Must be overridden by subclasses
-    @abstractmethod
-    def satisfied(self, assignment: Dict[V, D]) -> bool:
-         ...
-
   
 # A constraint satisfaction problem consists of variables of type V
 # that have ranges of values known as domains of type D and constraints
@@ -35,12 +21,12 @@ class CSP(Generic[V, D]):
             if variable not in self.domains:
                 raise LookupError("Every variable should have a domain assigned to it.")
 
-    def add_constraint(self, constraint: Constraint[V, D]) -> None:
+    def add_constraint(self, constraint: Constraint) -> None:
         self.constraints.append(constraint)
 
     # Check if the value assignment is consistent by checking all constraints
     # for the given variable against it
-    def consistent(self, assignments: Dict[V, D], student: Student = student_mock1) -> bool:
+    def consistent(self, assignments: Dict[V, D], student: Student) -> bool:
         for constraint in self.constraints:
             if not constraint.satisfied({k: v for k, v in assignments.items() if v}, student):
                 return False
