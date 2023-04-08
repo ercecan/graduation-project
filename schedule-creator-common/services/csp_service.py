@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Dict, Generic, List, Optional, TypeVar
-from models.student import Student
 from models.constraints import Constraint
+from dtos.student_dto import StudentSearchDto
 
 V = TypeVar('V') # variable type
 D = TypeVar('D') # domain type
@@ -26,13 +26,13 @@ class CSP(Generic[V, D]):
 
     # Check if the value assignment is consistent by checking all constraints
     # for the given variable against it
-    def consistent(self, assignments: Dict[V, D], student: Student) -> bool:
+    def consistent(self, assignments: Dict[V, D], student: StudentSearchDto) -> bool:
         for constraint in self.constraints:
             if not constraint.satisfied({k: v for k, v in assignments.items() if v}, student):
                 return False
         return True
 
-    def backtracking_search(self, assignment: Dict[V, D] = {}) -> Optional[Dict[V, D]]:
+    def backtracking_search(self, student: StudentSearchDto, assignment: Dict[V, D] = {}) -> Optional[Dict[V, D]]:
         # assignment is complete if every variable is assigned (our base case)
         if len(assignment) == len(self.variables):
             return assignment
@@ -46,8 +46,8 @@ class CSP(Generic[V, D]):
             local_assignment = assignment.copy()
             local_assignment[first] = value
             # if we're still consistent, we recurse (continue)
-            if self.consistent(local_assignment):
-                result: Optional[Dict[V, D]] = self.backtracking_search(local_assignment)
+            if self.consistent(local_assignment, student=student):
+                result: Optional[Dict[V, D]] = self.backtracking_search(local_assignment, student=student)
                 # if we didn't find the result, we will end up backtracking
                 if result is not None:
                     self.answer.append(result) 

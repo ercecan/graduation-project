@@ -42,7 +42,7 @@ class SchedulerService:
         for c in self.constraints:
             csp_service.add_constraint(c)
         
-        csp_service.backtracking_search()
+        csp_service.backtracking_search(student=student_dto)
         return csp_service.get_all_possible_schedules()
 
 
@@ -58,7 +58,7 @@ class SchedulerService:
         scored_schedules.sort(key=lambda x: x[1], reverse=True)
         return scored_schedules[:5]
     
-    def create_schedule_objects(self, student_id: str, base_schedules: List[Any], preferences: List[Preference], term: Term) -> Schedule:
+    async def create_schedule_objects(self, student_id: str, base_schedules: List[Any], preferences: List[Preference], term: Term) -> Schedule:
         schedule_dtos = []
         schedules_db = []
         for i, s in enumerate(base_schedules):
@@ -79,5 +79,5 @@ class SchedulerService:
             schedule_dto.student_id = student_id
             schedule_dto.term = term
             schedule_dtos.append(schedule_dto)
-        
+        await self.schedule_db_service.save_many_schedules(schedules_db)
         return schedule_dtos

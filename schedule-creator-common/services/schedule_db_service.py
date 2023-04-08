@@ -1,4 +1,5 @@
 from models.schedule import Schedule
+from models.course import FuturePlan
 from bson import ObjectId
 from typing import List
 from dtos.schedule_dto import ScheduleDto
@@ -70,3 +71,8 @@ class ScheduleDBService:
 
     async def save_many_schedules(self, schedules: List[Schedule]):
         await self.db.insert_many(schedules)
+    
+    async def add_future_plan(self, schedule_id: str, future_plan: List[FuturePlan]):
+        schedule = await self.get_schedule_by_id(schedule_id)
+        schedule.future_plan = future_plan
+        await schedule.replace()

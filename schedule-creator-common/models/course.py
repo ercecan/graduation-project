@@ -56,5 +56,5 @@ class OpenedCourse(Document, BaseModel):
         return 3*self.course.ects**3 + 2*self.course.ects**2 - 5
     
 class FuturePlan(BaseModel):
-    course_id: str
+    course_ids: List[str]
     term: Term
