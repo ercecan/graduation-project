@@ -3,12 +3,9 @@ from typing import Any, List, Optional
 from beanie import Document, Indexed
 from enums.student_types import StudentTypes
 from enums.course_tags import Tags
-from pydantic import BaseModel
 
-from .course import Course, TakenCourse
+from .course import TakenCourse
 from .major import Major
-from .schedule import Schedule
-from .school import School
 
 
 class Student(Document):

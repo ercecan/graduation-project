@@ -1,5 +1,5 @@
-from typing import Optional, List
-from .course import OpenedCourse, FuturePlan
+from typing import Optional, List, Any
+from .course import FuturePlan
 from .time import Term
 from .preferences import Preference
 from beanie import Document
