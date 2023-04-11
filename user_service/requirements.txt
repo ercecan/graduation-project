@@ -18,6 +18,7 @@ lazy-model==0.0.5
 MarkupSafe==2.1.2
 motor==3.1.1
 orjson==3.8.9
+pika==1.3.1
 pydantic==1.10.5
 pymongo==4.3.3
 python-dateutil==2.8.2
@@ -25,7 +26,6 @@ python-dotenv==1.0.0
 python-multipart==0.0.6
 PyYAML==6.0
 rfc3986==1.5.0
--e git+https://github.com/ercecan/graduation-project.git@d7cc7c323a15978e26b9e19a2d16a901e93ea514#egg=schedule_creator_common&subdirectory=schedule-creator-common
 six==1.16.0
 sniffio==1.3.0
 starlette==0.26.1
