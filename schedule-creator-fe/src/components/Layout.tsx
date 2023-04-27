@@ -50,7 +50,9 @@ interface NavigationMap {
   const navigationMap: NavigationMap = {
     "1": '/home',
     "2": '/profile',
-    "3": '/panel'
+    "3": '/schedule/1',
+    "4": '/schedule/2',
+    "5": '/schedule/3',
   };
 
 const MyLayout = (props: LayoutProps) => {

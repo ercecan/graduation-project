@@ -15,7 +15,7 @@ const StyledContainer = styled.div`
 `;
 
 const StyledScheduleView = styled(ScheduleView)`
-  width: 700px;
+  width: 500px;
   heigth: 400px;
 `;
 const Schedule = (): JSX.Element => {
