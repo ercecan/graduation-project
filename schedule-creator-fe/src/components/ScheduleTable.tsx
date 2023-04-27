@@ -1,6 +1,18 @@
 import React from 'react';
 import { Space, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import CreateScheduleComponent from './CreateScheduleComponent';
+import styled from 'styled-components';
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 80vh;
+  .ant-spin-nested-loading{
+    width: 100%;
+  }
+`;
 
 interface DataType {
   key: string;
@@ -83,6 +95,14 @@ const data: DataType[] = [
   },
 ];
 
-const ScheduleTable = () => <Table columns={columns} dataSource={data} />;
+const ScheduleTable = () => {
+  // TODO
+  return (
+  <Container>
+    <CreateScheduleComponent />
+    <Table columns={columns} dataSource={data} style={{display: "flex", width: "100%"}}/>
+  </Container>
+  )
+}
 
 export default ScheduleTable;
