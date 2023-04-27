@@ -63,7 +63,7 @@ const MyLayout = (props: LayoutProps) => {
   const navigate = useNavigate();
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout>
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
         <div style={{ height: 32, margin: 16, background: 'rgba(255, 255, 255, 0.2)' }} />
         <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} onClick={(event) => navigate(navigationMap[event.key].toString())}/>
@@ -73,7 +73,7 @@ const MyLayout = (props: LayoutProps) => {
           <Breadcrumb style={{ margin: '16px 0' }}>
             <Breadcrumb.Item>User</Breadcrumb.Item>
           </Breadcrumb>
-          <div style={{ padding: 24, minHeight: 750, background: colorBgContainer }}>
+          <div style={{ padding: 24, background: colorBgContainer }}>
             {props.children}
           </div>
         </Content>

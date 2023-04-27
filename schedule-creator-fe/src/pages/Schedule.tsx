@@ -1,18 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
-import { StyledCommonContainer } from "../GeneralStyle";
-import { ScheduleView } from "react-schedule-view";
-
-const StyledContainer = styled.div`
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-`;
+import { ScheduleView, createTheme } from "react-schedule-view";
 
 const StyledScheduleView = styled(ScheduleView)`
   width: 500px;
@@ -24,6 +13,15 @@ const Schedule = (): JSX.Element => {
   const routeLogin = () => {
     navigate("/");
   };
+
+  const theme = createTheme("apple", {
+    hourHeight: "53px",
+    style: {
+      dayLabels: {
+        fontWeight: "bold",
+      },
+    },
+  });
 
   const data = [
     {
@@ -120,15 +118,12 @@ const Schedule = (): JSX.Element => {
   ];
 
   return (
-    <StyledCommonContainer>
-      <StyledContainer>
         <StyledScheduleView
           daySchedules={data}
-          viewStartTime={9}
-          viewEndTime={15}
+          viewStartTime={8}
+          viewEndTime={17}
+          theme={theme}
         />
-      </StyledContainer>
-    </StyledCommonContainer>
   );
 };
 
