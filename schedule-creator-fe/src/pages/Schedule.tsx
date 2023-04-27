@@ -118,7 +118,7 @@ const Schedule = (): JSX.Element => {
   ];
 
   return (
-        <StyledScheduleView
+     <StyledScheduleView
           daySchedules={data}
           viewStartTime={8}
           viewEndTime={17}

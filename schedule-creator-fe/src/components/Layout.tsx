@@ -7,10 +7,12 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { Breadcrumb, Layout, Menu, theme, Image, Typography } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import logo from "../icon.png";
 
 const { Header, Content, Footer, Sider } = Layout;
+const { Title } = Typography;
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -65,7 +67,10 @@ const MyLayout = (props: LayoutProps) => {
   return (
     <Layout style={{minHeight: '100vh'}}>
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-        <div style={{ height: 32, margin: 16, background: 'rgba(255, 255, 255, 0.2)' }} />
+        <div style={{margin: '16px 0' }} >
+          <Image src={logo} width={50} height={50} preview={false} />
+          <Title level={5} style={{color: 'white', marginTop: '0px'}}>Schedule Creator</Title> 
+        </div>
         <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} onClick={(event) => navigate(navigationMap[event.key].toString())}/>
       </Sider>
       <Layout className="site-layout">
