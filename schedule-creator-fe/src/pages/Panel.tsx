@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import UserTable from "../components/UserTable";
 import { useNavigate } from "react-router-dom";
 import { StyledCommonContainer } from "../GeneralStyle";
 
@@ -28,7 +27,9 @@ const Panel = (): JSX.Element => {
     <StyledCommonContainer>
       <StyledContainer>
         <StyledHeader>Welcome to Schedule Creator Website</StyledHeader>
-        <UserTable />
+        {/* Profile - Settings (tc yükle, öğrenci bilgileri)
+        HomePage (Schedule'lar (gözat butonu, sil butonu), Yeni shcedule olıuştur butonu Modal olacak)
+        Schedule_Detail -> 1 schedule için her türlü ayrıntı  */}
       </StyledContainer>
     </StyledCommonContainer>
   );
