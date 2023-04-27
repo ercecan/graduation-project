@@ -63,7 +63,7 @@ const MyLayout = (props: LayoutProps) => {
     token: { colorBgContainer },
   } = theme.useToken();
   const navigate = useNavigate();
-
+  console.log(props);
   return (
     <Layout style={{minHeight: '100vh'}}>
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
@@ -76,7 +76,6 @@ const MyLayout = (props: LayoutProps) => {
       <Layout className="site-layout">
         <Content style={{ margin: '0 16px' }}>
           <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>User</Breadcrumb.Item>
           </Breadcrumb>
           <div style={{ padding: 24, background: colorBgContainer }}>
             {props.children}
