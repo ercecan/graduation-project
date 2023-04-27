@@ -1,6 +1,3 @@
-@student_router.post("/create-reccommendation")
-async def create_reccommendation():
-    pass
 from fastapi import APIRouter, HTTPException, Response
 from service.recommendation_service import RecommendationService
 from dtos.schedule_dto import ScheduleDto
@@ -16,10 +13,10 @@ recommendation_service = RecommendationService()
 
 
 
-@recommendation_router.post("/create")
-async def create_recommendation():
+@recommendation_router.post("/")
+async def create_recommendation(payload: dict):
     try:
-        recommendation_service.create_recommendation()
+        recommendation_service.create_recommendation(payload=payload, token='token')
     except Exception as e:
         print(e)
         raise e

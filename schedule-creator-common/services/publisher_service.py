@@ -1,7 +1,7 @@
 import json
 import uuid
 import pika
-
+import os
 
 class Publisher():
     def __init__(self, queue_name: str):

@@ -1,15 +1,16 @@
-FROM python:3.8
+FROM python:3.8-slim-buster
 
-RUN apt-get update \
-  && apt-get install -y --no-install-recommends --no-install-suggests \
-  build-essential default-libmysqlclient-dev \
-  && pip install --no-cache-dir --upgrade pip
-
-WORKDIR /app
-COPY ./requirements.txt /app
-RUN pip install --no-cache-dir --requirement /app/requirements.txt
-COPY . /app
-
+ARG COMMON_URL
+# Expose the port 8000 in which our application runs
 EXPOSE 8000
 
-CMD ["python3", "main.py"]
+# Make /app as a working directory in the container# Copy requirements from host, to docker container in /app
+WORKDIR /app
+
+# Copy requirements from host, to docker container in /app
+ADD ./requirements.txt /app/requirements.txt
+
+# Copy everything from current directory to /app in the container
+ADD . /app
+RUN pip install $COMMON_URL
+CMD ["python", "main.py"]

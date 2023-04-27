@@ -8,9 +8,11 @@ schedule_creator_common.egg-info/
 */*/venv
 */.idea
 */.env
+scheduler_service/.env
 */*/.env
 schedule-creator-ms-structure
 */secret.yaml
 */*/secret.yaml
 */.vscode
 */*/node_modules
+.DS_Store

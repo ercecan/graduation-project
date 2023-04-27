@@ -13,9 +13,9 @@ load_dotenv()
 
 class DBService:
     @staticmethod
-    async def init_database():
+    async def init_database(uri: str = "mongodb://localhost:27017"):
         try:
-            client = AsyncIOMotorClient("mongodb://localhost:27017")
+            client = AsyncIOMotorClient(uri)
             await init_beanie(
                 database=client["schedule-creator"],
                 document_models=[Student, Course, OpenedCourse, School, Schedule],

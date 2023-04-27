@@ -2,7 +2,9 @@ import os
 import pika
 import json
 from pika.exceptions import ConnectionClosedByBroker, AMQPChannelError, AMQPConnectionError
+from services.redis_service import RedisService
 
+r = RedisService()
 
 class Consumer:
     def __init__(self,  queue_name: str):
@@ -44,10 +46,18 @@ class Consumer:
     def process_incoming_message(self, channel, method_frame, header_frame, body):
         try:
             """Processing incoming message from RabbitMQ"""
-            print('consumed message, processing message')
             json_response = json.loads(body)
             headers = header_frame.headers  # token is headers['token']
             delivery_tag = method_frame.delivery_tag
+            channel.basic_ack(delivery_tag)
             # create schedule
+            id = json_response['id']
+            type_='recommendation'
+            r_key = f"{type_}:{id}"
+            r.set_val(key=r_key,val='creating')            
+            print(json_response)
+            # schedule completed, update status
+            r.set_val(key=r_key,val='completed')
+            channel.basic_ack(delivery_tag)
         except Exception as e:
             print(e)

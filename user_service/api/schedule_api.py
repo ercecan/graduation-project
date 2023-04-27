@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Response
 from service.schedule_service import ScheduleService
-from dtos.schedule_dto import ScheduleDto
+from services.redis_service import RedisService
 
 
 schedule_router = APIRouter(
@@ -10,13 +10,12 @@ schedule_router = APIRouter(
 )
 
 schedule_service = ScheduleService()
+r = RedisService()
 
-
-
-@schedule_router.post("/create")
-async def create_schedule():
+@schedule_router.post("/")
+async def create_schedule(payload: dict):
     try:
-        schedule_service.create_schedule()
+        await schedule_service.create_schedule(payload=payload, token='token')
     except Exception as e:
         print(e)
         raise e
@@ -40,3 +39,14 @@ async def get_schedules():
     except Exception as e:
         print(e)
         raise e
+
+
+@schedule_router.get("/status-check")
+async def status_check(id: str):
+    try:
+        status = r.get_val(key=id)
+        return Response(status_code=200, content=status)
+    except Exception as e:
+        print(e)
+        raise e
+    

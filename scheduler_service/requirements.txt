@@ -1,4 +1,5 @@
 anyio==3.6.2
+async-timeout==4.0.2
 beanie==1.17.0
 bson==0.5.10
 certifi==2022.12.7
@@ -17,20 +18,22 @@ lazy-model==0.0.5
 MarkupSafe==2.1.2
 motor==3.1.1
 orjson==3.8.9
+pika==1.3.1
 pydantic==1.10.5
 pymongo==4.3.3
 python-dateutil==2.8.2
 python-dotenv==1.0.0
 python-multipart==0.0.6
 PyYAML==6.0
+redis==4.5.4
 rfc3986==1.5.0
-schedule-creator-common @ file:///Users/barisemremise/Desktop/bitirme/graduation-project/schedule-creator-common
+#-e git+https://github.com/ercecan/schedule-creator-common.git@4fefe95c0dee90ea65301a6c9b5a01ed56294271#egg=schedule_creator_common
 six==1.16.0
 sniffio==1.3.0
 starlette==0.26.1
 toml==0.10.2
 typing==3.7.4.3
-typing_extensions==4.5.0
+typing-extensions==4.5.0
 ujson==5.7.0
 uvicorn==0.21.1
 uvloop==0.17.0
