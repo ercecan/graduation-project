@@ -9,6 +9,7 @@ class StudentService():
     def __init__(self):
         self.student_db_service = StudentDBService()
         self.school_db_service = SchoolDBService()
+        self.gensalt = b'$2b$12$FCkRFDAfluWyd./x1kAPWe'
 
     async def create_user(self, student_dto: StudentRegisterDto):
         password = self.hash_password(student_dto.password)
@@ -31,4 +32,4 @@ class StudentService():
     
     def hash_password(self, password: str) -> str:
         """Returns a salted password hash"""
-        return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+        return bcrypt.hashpw(password.encode(), self.gensalt).decode()
