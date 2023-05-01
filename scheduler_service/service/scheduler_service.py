@@ -59,6 +59,7 @@ class SchedulerService:
     async def create_schedule_objects(self, student_id: str, base_schedules: List[Any], preferences: List[dict], term: Term) -> Schedule:
         schedule_dtos = []
         schedules_db = []
+        print(base_schedules)
         for i, s in enumerate(base_schedules):
             if len(s[0]) > 0:
                 schedule = Schedule()
@@ -78,5 +79,7 @@ class SchedulerService:
                 schedule_dto.student_id = student_id
                 schedule_dto.term = term
                 schedule_dtos.append(schedule_dto)
-        await self.schedule_db_service.save_many_schedules(schedules_db)
+        if len(schedules_db) > 0:
+            await self.schedule_db_service.save_many_schedules(schedules_db)
+        
         return schedule_dtos

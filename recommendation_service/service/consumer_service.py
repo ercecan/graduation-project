@@ -1,15 +1,21 @@
 import os
 import pika
+import aio_pika
 import json
 from pika.exceptions import ConnectionClosedByBroker, AMQPChannelError, AMQPConnectionError
 from services.redis_service import RedisService
+from dtos.schedule_dto import ScheduleDto
+from services.schedule_db_service import ScheduleDBService
+from models.time import Term
+import asyncio
+
 
 r = RedisService()
 
 class Consumer:
     def __init__(self,  queue_name: str):
         self.consume_queue_name = queue_name
-        self.connection_parameters=pika.ConnectionParameters(host=os.environ.get('RABBITMQ_HOST', 'rabbitmq'))
+        self.host = os.environ.get('RABBITMQ_HOST', 'rabbitmq')
         self.connection = None
         self.channel = None
         self.consume_queue = None
@@ -17,47 +23,77 @@ class Consumer:
         self.response = None
       
 
-    def consume(self):
+    async def consume(self):
         try:
-            self.connection = pika.BlockingConnection(self.connection_parameters)
-            self.channel = self.connection.channel()
-            self.channel.basic_qos(prefetch_count=1)
-            self.consume_queue = self.channel.queue_declare(queue=self.consume_queue_name)
-            self.callback_queue = self.consume_queue.method.queue
-            self.channel.basic_consume(queue=self.consume_queue_name,
-                                        on_message_callback=self.process_incoming_message)
-            try:
-                self.channel.start_consuming()
-            except KeyboardInterrupt:
-                self.channel.stop_consuming()
+            queue_name = "scheduler"
+            connection = await aio_pika.connect_robust( "amqp://guest:guest@127.0.0.1",)
+            async with connection:
+                # Creating channel
+                channel = await connection.channel()
 
-            self.connection.close()
+                # Will take no more than 10 messages in advance
+                await channel.set_qos(prefetch_count=10)
+
+                # Declaring queue
+                queue = await channel.declare_queue(queue_name, durable= True,
+                        exclusive= False,  
+                        auto_delete=False,  
+                        arguments= None)
+
+                async with queue.iterator() as queue_iter:
+                    async for message in queue_iter:
+                        async with message.process():
+                            json_body = json.loads(message.body)
+                            headers = message.headers
+                            type = json_body['message']
+                            if type == 'create schedule':
+                                await Consumer.process_incoming_message(msg=json_body, headers=headers)
+
+
+                            if queue.name in message.body.decode():
+                                break
         except ConnectionClosedByBroker as e:
             print(e)
             raise e
         except (AMQPChannelError, AMQPConnectionError) as e:
             print(e)
             self.connection.close()
-            self.run()
+            self.consume()
         except Exception as e:
             raise e
-            
-
-    def process_incoming_message(self, channel, method_frame, header_frame, body):
+        
+    @staticmethod   
+    async def process_incoming_message(msg, headers):
         try:
+            
             """Processing incoming message from RabbitMQ"""
-            json_response = json.loads(body)
-            headers = header_frame.headers  # token is headers['token']
-            delivery_tag = method_frame.delivery_tag
-            channel.basic_ack(delivery_tag)
+            print('consumed message, processing message')
+            
+            json_response = msg
+            # process the message here
+            print(json_response)
             # create schedule
             id = json_response['id']
-            type_='recommendation'
+            type_='schedule'
             r_key = f"{type_}:{id}"
             r.set_val(key=r_key,val='creating')            
             print(json_response)
+            message = json_response['message']
+            if message == 'create recommendation':
+                # create schedule ########
+                await Consumer.test_create_recommendation(json_response)
             # schedule completed, update status
             r.set_val(key=r_key,val='completed')
-            channel.basic_ack(delivery_tag)
         except Exception as e:
             print(e)
+
+    @staticmethod
+    async def test_create_recommendation(payload):
+        try:
+            pass
+           
+        except Exception as e:
+            print(e)
+            raise e
+
+
