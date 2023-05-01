@@ -23,7 +23,7 @@ async def login_user(student_dto: StudentLoginDto):
     user = await student_service.get_user_by_email(student_dto.email)
     if user:
         if student_service.verify_password(password=student_dto.password, hashed_password=user.password):
-            return Response(status_code=200, content=json.dumps({'Message': 'Login Successful', 'email': user.email, 'user_id': str(user.id)}))
+            return Response(status_code=200, content=json.dumps({'Message': 'Login Successful', 'email': user.email, 'user_id': str(user.id), 'user_student_id': user.student_id}))
         else:
             raise HTTPException(status_code=401, detail="Incorrect password")
     else:

@@ -55,11 +55,3 @@ async def create_schedule(student_id: str, payload: dict):
     except Exception as e:
         print(e)
         raise e
-
-@schedule_router.delete("/delete/{schedule_id}")
-async def delete_schedule(schedule_id: str):
-    try:
-        await schedule_db_service.delete_schedule(schedule_id)
-    except Exception as e:
-        print(e)
-        raise e

@@ -6,6 +6,7 @@
   "python.defaultInterpreterPath": "./scheduler_service/venv/bin/python",
   "python.analysis.extraPaths": [
     "./schedule-creator-common",
-    "./scheduler_service"
+    "./scheduler_service",
+    "./schedule-creator-common"
   ]
 }
