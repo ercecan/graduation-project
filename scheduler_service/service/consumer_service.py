@@ -3,8 +3,14 @@ import pika
 import json
 from pika.exceptions import ConnectionClosedByBroker, AMQPChannelError, AMQPConnectionError
 from services.redis_service import RedisService
+from utils.schedule_utils import create_preferences, get_ITU_constraints
+from dtos.schedule_dto import ScheduleDto
+from service.scheduler_service import SchedulerService
+from services.schedule_db_service import ScheduleDBService
+from models.time import Term
 
 r = RedisService()
+schedule_service = SchedulerService(get_ITU_constraints)
 
 class Consumer:
     def __init__(self,  queue_name: str):
@@ -44,7 +50,7 @@ class Consumer:
             raise e
             
     @staticmethod
-    def process_incoming_message(channel, method_frame, header_frame, body):
+    async def process_incoming_message(channel, method_frame, header_frame, body):
         try:
             """Processing incoming message from RabbitMQ"""
             print('consumed message, processing message')

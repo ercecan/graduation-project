@@ -47,7 +47,7 @@ class CSP(Generic[V, D]):
             local_assignment[first] = value
             # if we're still consistent, we recurse (continue)
             if self.consistent(local_assignment, student=student):
-                result: Optional[Dict[V, D]] = self.backtracking_search(local_assignment, student=student)
+                result: Optional[Dict[V, D]] = self.backtracking_search(student, local_assignment)
                 # if we didn't find the result, we will end up backtracking
                 if result is not None:
                     self.answer.append(result) 

@@ -39,7 +39,7 @@ class PrerequisitiesConstraint(Constraint[OpenedCourseSearchDto, bool]):
         if len(assigned_courses) == 0:
             return True
         last_course = list(assigned_courses.keys())[-1]
-        if last_course.course.prereqs == None:
+        if last_course.course.prereqs == None or last_course.course.prereqs == []:
             return True
         
         for prereq in last_course.course.prereqs:
@@ -56,7 +56,7 @@ class YearConstraint(Constraint[OpenedCourseSearchDto, bool]):
         years = list(assigned_courses.keys())[-1].course.year_restrictions
         if years == None:
             return True
-        return student.year in years
+        return all(i <= student.year for i in years)
 
 class MajorConstraint(Constraint[OpenedCourseSearchDto, bool]):
     def satisfied(self, assigned_courses: List[OpenedCourseSearchDto], student: StudentSearchDto) -> bool:
@@ -68,10 +68,11 @@ class MajorConstraint(Constraint[OpenedCourseSearchDto, bool]):
         if last_course.course.major_restrictions == None:
             return True
         
+
         for major_restriction in last_course.course.major_restrictions:
-            if major_restriction not in [major.code for major in student.major]:
-                return False
-        return True
+            if major_restriction in [major.code for major in student.major]:
+                return True
+        return False
 
 class CapacityConstraint(Constraint[OpenedCourseSearchDto, bool]):
 
@@ -80,7 +81,7 @@ class CapacityConstraint(Constraint[OpenedCourseSearchDto, bool]):
             return True
         
         last_course = list(assigned_courses.keys())[-1]
-        if last_course.course.capacity == 0:
+        if last_course.capacity == 0:
             return False
         return True
 

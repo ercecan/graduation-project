@@ -6,12 +6,12 @@ from beanie import Document
 
 
 class Schedule(Document):
-    name: str
+    name: Optional[str]
     courses: Optional[List[str]] = None
     term: Optional[Term] = None
     score: Optional[int] = None
     future_plan: Optional[List[FuturePlan]] = None
-    preferences: Optional[List[Preference]] = None
+    preferences: Optional[List[dict]] = None
     student_id: Optional[str] = None
 
     class Settings:

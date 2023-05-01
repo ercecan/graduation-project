@@ -30,9 +30,9 @@ class OpenedCourseDBService:
         courses = await self.course_db_service.get_courses_by_ids(course_ids)
         for opened_course in opened_courses:
             for course in courses:
-                if course.id == opened_course.course_id:
-                    opened_course_dtos.append(self.create_opened_course_dto(opened_course, course))
-
+                if str(course.id) == opened_course.course_id:
+                    dto = self.create_opened_course_dto(opened_course, course)
+                    opened_course_dtos.append(dto)
         return opened_course_dtos
 
     @staticmethod
@@ -57,3 +57,4 @@ class OpenedCourseDBService:
         dto.capacity = opened_course.capacity
         dto.classroom = opened_course.classroom
         dto.teaching_method = opened_course.teaching_method
+        return dto

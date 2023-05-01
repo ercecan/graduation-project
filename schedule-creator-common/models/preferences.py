@@ -7,7 +7,7 @@ from enums.days import Days
 
 from dtos.course_dto import OpenedCourseSearchDto
 
-class Preference(ABC, BaseModel):
+class Preference(ABC):
     @abstractmethod
     def __init__(self) -> None:
         ...
