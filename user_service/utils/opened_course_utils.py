@@ -17,7 +17,7 @@ def create_opened_course_from_dto(opened_course: OpenedCourseDto, course_id: str
     term = Term(year=opened_course.term['year'], semester=opened_course.term['semester'])
     time_slot = []
     for time in opened_course.time:
-        time_slot.append(TimeSlot(day=time['day'], start_time=time['start'], end_time=time['end']))
+        time_slot.append(TimeSlot(day=time['day'], start_time=time['start_time'], end_time=time['end_time']))
     
     classroom = None
     if opened_course.classroom:
