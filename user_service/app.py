@@ -11,6 +11,9 @@ load_dotenv()
 from api.student_api import student_router
 from api.schedule_api import schedule_router
 from api.recommendation_api import recommendation_router
+from api.course_api import course_router
+from api.school_api import school_router
+from api.opened_course_api import opened_course_router
 from api.status_api import status_router
 from services.db_service import DBService
 
@@ -42,5 +45,8 @@ async def start_database():
     app.include_router(student_router)
     app.include_router(schedule_router)
     app.include_router(recommendation_router)
+    app.include_router(course_router)
+    app.include_router(school_router)
+    app.include_router(opened_course_router)
     app.include_router(status_router)
     await DBService.init_database(uri=mongo_uri)

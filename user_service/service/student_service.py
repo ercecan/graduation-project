@@ -12,11 +12,12 @@ class StudentService():
 
     async def create_user(self, student_dto: StudentRegisterDto):
         password = self.hash_password(student_dto.password)
-        school = await self.school_db_service.get_school_by_name(student.school)
+        school = await self.school_db_service.get_school_by_name(student_dto.school)
         if school is None:
             raise Exception("School not found")
-        student = Student(name=student_dto.name, surname=student_dto.surname, email=student_dto.email, password=password, 
-                          school_id=school.id, major=student_dto.major, year= student_dto.year, gpa=student_dto.gpa,
+        print(school)
+        student = Student(name=student_dto.name, student_id=student_dto.student_id,  surname=student_dto.surname, email=student_dto.email, password=password, 
+                          school_id=str(school.id), major=student_dto.major, year= student_dto.year, gpa=student_dto.gpa,
                           student_type=student_dto.student_type)
         
         
@@ -28,6 +29,6 @@ class StudentService():
     def verify_password(self, password, hashed_password):
         return self.hash_password(password) == hashed_password
     
-    def hash_password(password: str) -> str:
+    def hash_password(self, password: str) -> str:
         """Returns a salted password hash"""
-        return bcrypt.hashpw(password.encode(), "asd").decode()
+        return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
