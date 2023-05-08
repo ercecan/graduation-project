@@ -18,6 +18,7 @@ steps:
     - "-c"
     - |
       docker build --build-arg COMMON_URL=git+https://ercecan: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@github.com/ercecan/schedule-creator-common.git -t europe-west3-docker.pkg.dev/$PROJECT_ID/grad/${_SERVICE}:$SHORT_SHA ./${_SERVICE}_service
+
 # This step pushes the image to Artifact Registry
 # The PROJECT_ID and SHORT_SHA variables are automatically
 # replaced by Cloud Build.
