@@ -1,6 +1,15 @@
 FROM python:3.8-slim-buster
 
 ARG COMMON_URL
+
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    software-properties-common \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
 # Expose the port 8000 in which our application runs
 EXPOSE 8000
 
