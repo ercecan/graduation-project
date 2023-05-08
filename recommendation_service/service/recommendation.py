@@ -10,7 +10,6 @@ from services.schedule_db_service import ScheduleDBService
 from services.student_db_service import StudentDBService
 from services.opened_course_db_service import OpenedCourseDBService
 from utils.semester_util import next_semester
-from utils.constraints_util import get_ITU_constraints
 from enums.grades import Grades
 from models.time import Term
 
