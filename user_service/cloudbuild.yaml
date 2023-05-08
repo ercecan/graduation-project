@@ -9,7 +9,8 @@ steps:
       set -x && \
       echo "JWT_SECRET=$(gcloud secrets versions access latest --secret="jwt-secret-key")" >> .env
       echo "MONGO_URI=$(gcloud secrets versions access latest --secret="mongo-cloud-uri")" >> .env
-      cp .env ${_SERVICE}/
+      cp .env ${_SERVICE}_service/
+
 - name: "gcr.io/cloud-builders/docker"
   id: Build
   entrypoint: "/bin/sh"
@@ -53,7 +54,7 @@ steps:
     cd graduation-project-env && \
     git fetch && \
     git checkout ${_SERVICE}_candidate && \
-    cd ${_SERVICE} && \
+    cd ${_SERVICE}_service && \
     git config user.email $(gcloud auth list --filter=status:ACTIVE --format='value(account)')
   volumes:
   - name: 'ssh'
@@ -66,7 +67,7 @@ steps:
   - -c
   - |
     set -x && \
-    sed "s/GOOGLE_CLOUD_PROJECT/${PROJECT_ID}/g" ${_SERVICE}/kubernetes.yaml.tpl | \
+    sed "s/GOOGLE_CLOUD_PROJECT/${PROJECT_ID}/g" ${_SERVICE}_service/kubernetes.yaml.tpl | \
     sed "s/COMMIT_SHA/${SHORT_SHA}/g" > graduation-project-env/${_SERVICE}/kubernetes.yaml
 
 - name: gcr.io/cloud-builders/git
