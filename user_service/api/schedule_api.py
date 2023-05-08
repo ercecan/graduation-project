@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Response
+from fastapi import APIRouter, Response
 from service.schedule_service import ScheduleService
 from services.redis_service import RedisService
 from services.schedule_db_service import ScheduleDBService
@@ -24,10 +24,11 @@ async def create_schedule(payload: dict):
 
 
 @schedule_router.get("/")
-async def get_schedule():
+async def get_schedule(schedule_id: int):
     '''Given a student id and schedule id, return the schedule for that student'''
     try:
-        schedule_service.get_schedule()
+        schedule = schedule_db_service.get_schedule_by_id(schedule_id)
+        return schedule
     except Exception as e:
         print(e)
         raise e

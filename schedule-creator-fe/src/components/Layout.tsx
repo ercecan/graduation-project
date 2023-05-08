@@ -1,22 +1,24 @@
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useMemo, useState } from 'react';
 import {
-  DesktopOutlined,
   FileOutlined,
   PieChartOutlined,
-  TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme, Image, Typography } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import logo from "../icon.png";
+import logo from '../icon.png';
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Content, Footer, Sider } = Layout;
 const { Title } = Typography;
 
-type MenuItem = Required<MenuProps>['items'][number];
+interface MenuItem {
+  key: React.Key;
+  icon?: React.ReactNode;
+  children?: MenuItem[];
+  label: React.ReactNode;
+}
 
-function getItem(
+function createMenuItem(
   label: React.ReactNode,
   key: React.Key,
   icon?: React.ReactNode,
@@ -27,35 +29,24 @@ function getItem(
     icon,
     children,
     label,
-  } as MenuItem;
+  };
 }
 
-
-const items: MenuItem[] = [
-  getItem('Home Page', '1', <PieChartOutlined />),
-  getItem('Profile & Settings', '2', <UserOutlined />),
-  getItem('Schedules', 'sub1',  <FileOutlined />, [
-    getItem('Schedule - 1', '3'),
-    getItem('Schedule - 2', '4'),
-    getItem('Schedule - 3', '5'),
-  ]),
-];
-
 interface LayoutProps {
-    children: ReactNode;
-  }
+  children: ReactNode;
+}
 
 interface NavigationMap {
   [key: string]: string;
 }
 
-  const navigationMap: NavigationMap = {
-    "1": '/home',
-    "2": '/profile',
-    "3": '/schedule/1',
-    "4": '/schedule/2',
-    "5": '/schedule/3',
-  };
+const navigationMap: NavigationMap = {
+  '1': '/home',
+  '2': '/profile',
+  // "3": '/schedule/1',
+  // "4": '/schedule/2',
+  // "5": '/schedule/3',
+};
 
 const MyLayout = (props: LayoutProps) => {
   const [collapsed, setCollapsed] = useState(false);
@@ -63,25 +54,54 @@ const MyLayout = (props: LayoutProps) => {
     token: { colorBgContainer },
   } = theme.useToken();
   const navigate = useNavigate();
-  console.log(props);
+
+  const jsonString = sessionStorage.getItem('schedules');
+  const schedules = jsonString ? JSON.parse(jsonString) : [];
+
+  const items = useMemo((): MenuItem[] => {
+    const menuItems = schedules.map((schedule: any) => {
+      navigationMap[schedule.id] = `/schedule/${schedule.id}`;
+      return createMenuItem(schedule.name, schedule.id);
+    });
+
+    return [
+      createMenuItem('Home Page', '1', <PieChartOutlined />),
+      createMenuItem('Profile & Settings', '2', <UserOutlined />),
+      createMenuItem('Schedules', 'sub1', <FileOutlined />, menuItems),
+    ];
+  }, []);
+
   return (
-    <Layout style={{minHeight: '100vh'}}>
-      <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-        <div style={{margin: '16px 0' }} >
+    <Layout style={{ minHeight: '100vh' }}>
+      <Sider
+        collapsible
+        collapsed={collapsed}
+        onCollapse={value => setCollapsed(value)}
+      >
+        <div style={{ margin: '16px 0' }}>
           <Image src={logo} width={50} height={50} preview={false} />
-          <Title level={5} style={{color: 'white', marginTop: '0px'}}>Schedule Creator</Title> 
+          <Title level={5} style={{ color: 'white', marginTop: '0px' }}>
+            Schedule Creator
+          </Title>
         </div>
-        <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} onClick={(event) => navigate(navigationMap[event.key].toString())}/>
+        <Menu
+          theme="dark"
+          defaultSelectedKeys={['1']}
+          mode="inline"
+          items={items}
+          onClick={event => navigate(navigationMap[event.key].toString())}
+        />
       </Sider>
       <Layout className="site-layout">
         <Content style={{ margin: '0 16px' }}>
-          <Breadcrumb style={{ margin: '16px 0' }}>
-          </Breadcrumb>
+          <Breadcrumb style={{ margin: '16px 0' }}></Breadcrumb>
           <div style={{ padding: 24, background: colorBgContainer }}>
             {props.children}
           </div>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>ITU Scheduler ©2023 Created by ITU</Footer>
+        <Footer style={{ textAlign: 'center' }}>
+          ITU Scheduler ©2023 Created by ITU
+        </Footer>
       </Layout>
     </Layout>
   );
