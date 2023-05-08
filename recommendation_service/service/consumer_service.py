@@ -8,9 +8,12 @@ from dtos.schedule_dto import ScheduleDto
 from services.schedule_db_service import ScheduleDBService
 from models.time import Term
 import asyncio
+from recommendation_service import RecommendationService
+from utils.constraints_util import getITUConstraints
 
 
 r = RedisService()
+recommendation_service = RecommendationService(getITUConstraints())
 
 class Consumer:
     def __init__(self,  queue_name: str):
@@ -80,8 +83,12 @@ class Consumer:
             print(json_response)
             message = json_response['message']
             if message == 'create recommendation':
-                # create schedule ########
-                await Consumer.test_create_recommendation(json_response)
+                student_dto = await recommendation_service.create_student_dto(json_response['student_id'])
+                student_dto = await recommendation_service.add_schedule_to_student(json_response['student_id'], json_response['schedule_id'],
+                                                                              json_response['semester'], json_response['year'])
+                future_plan = await recommendation_service.search(schedule_id=json_response['schedule_id'], term_number=json_response['term_number'],
+                                                                  student=student_dto, year_=json_response['year'], current_semester_=json_response['semester'])
+                print(future_plan)
             # schedule completed, update status
             r.set_val(key=r_key,val='completed')
         except Exception as e:
