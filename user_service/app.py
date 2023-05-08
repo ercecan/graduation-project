@@ -52,3 +52,8 @@ async def start_database():
     app.include_router(opened_course_router)
     app.include_router(status_router)
     await DBService.init_database(uri=mongo_uri)
+
+
+@app.get("/")
+async def root():
+    return {"message": "Welcome to Schedule Creator"}
