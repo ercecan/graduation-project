@@ -8,9 +8,12 @@ from dtos.schedule_dto import ScheduleDto
 from services.schedule_db_service import ScheduleDBService
 from models.time import Term
 import asyncio
+from recommendation_service import RecommendationService
+from utils.constraints_util import getITUConstraints
 
 
 r = RedisService()
+recommendation_service = RecommendationService(getITUConstraints())
 
 class Consumer:
     def __init__(self,  queue_name: str):
@@ -80,7 +83,9 @@ class Consumer:
             print(json_response)
             message = json_response['message']
             if message == 'create recommendation':
-                # create schedule ########
+                
+
+
                 await Consumer.test_create_recommendation(json_response)
             # schedule completed, update status
             r.set_val(key=r_key,val='completed')
