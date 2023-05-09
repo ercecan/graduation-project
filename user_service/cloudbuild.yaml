@@ -76,7 +76,7 @@ steps:
 
 - name: gcr.io/cloud-builders/git
   id: Push manifest
-  entrypoint: /bin/sh
+  entrypoint: 'bash'
   args:
   - -c
   - |
@@ -87,7 +87,8 @@ steps:
     Built from commit ${COMMIT_SHA} of repository grad
     Author: $(git log --format='%an <%ae>' -n 1 HEAD)" && \
     # Push your changes
-    git push
+    cat /root/.ssh/id_rsa
+    git push origin ${_SERVICE}_candidate
   volumes:
   - name: 'ssh'
     path: /root/.ssh
