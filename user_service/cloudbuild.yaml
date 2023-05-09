@@ -1,5 +1,7 @@
 steps:
 - name: 'gcr.io/cloud-builders/git'
+  args: ['clone', 'https://github.com/ercecan/graduation-project.git']
+- name: 'gcr.io/cloud-builders/git'
   args: ['clone', 'https://github.com/ercecan/graduation-project-env.git']
 
 # This step gets the secrets from Secret Manager and writes them to a .env file
