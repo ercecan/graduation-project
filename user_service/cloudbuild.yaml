@@ -87,7 +87,7 @@ steps:
     Built from commit ${COMMIT_SHA} of repository grad
     Author: $(git log --format='%an <%ae>' -n 1 HEAD)" && \
     # Push your changes
-    git push origin ${_SERVICE}_candidate
+    git push
   volumes:
   - name: 'ssh'
     path: /root/.ssh
