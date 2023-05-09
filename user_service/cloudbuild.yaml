@@ -40,7 +40,6 @@ steps:
     set -x && \
     echo "$$SSH_KEY" >> /root/.ssh/id_rsa
     chmod 400 /root/.ssh/id_rsa
-    cat /root/.ssh/id_rsa
     cp known_hosts.github /root/.ssh/known_hosts
   volumes:
   - name: 'ssh'
@@ -87,7 +86,7 @@ steps:
     Built from commit ${COMMIT_SHA} of repository grad
     Author: $(git log --format='%an <%ae>' -n 1 HEAD)" && \
     # Push your changes
-    cat /root/.ssh/id_rsa
+    cat /root/.ssh/known_hosts
     git push origin ${_SERVICE}_candidate
   volumes:
   - name: 'ssh'
