@@ -129,7 +129,8 @@ steps:
     set -x && \
     git clone --recurse-submodules git@github.com:ercecan/graduation-project-env.git && \
     cd graduation-project-env && \
-    git fetch && \
+    ls -a && \
+    
     git checkout ${_SERVICE}_candidate && \
     cd ${_SERVICE}_service && \
     git config user.email $(gcloud auth list --filter=status:ACTIVE --format='value(account)')
