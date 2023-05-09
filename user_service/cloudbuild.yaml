@@ -53,7 +53,7 @@ steps:
   - -c
   - |
     set -x && \
-    git clone -v git@github.com:ercecan/graduation-project-env.git && \
+    git clone -v https://github.com/ercecan/graduation-project-env.git && \
     cd graduation-project-env && \
     git fetch && \
     git checkout ${_SERVICE}_candidate && \
