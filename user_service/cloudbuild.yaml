@@ -1,4 +1,7 @@
 steps:
+- name: 'gcr.io/cloud-builders/git'
+  args: ['clone', 'https://github.com/ercecan/graduation-project-env.git']
+
 # This step gets the secrets from Secret Manager and writes them to a .env file
 - name: "gcr.io/cloud-builders/gcloud"
   id: PrepareSecrets
@@ -7,6 +10,7 @@ steps:
     - "-c"
     - |
       set -x && \
+      cd graduation-project-env
       echo "JWT_SECRET=$(gcloud secrets versions access latest --secret="jwt-secret-key")" >> .env
       echo "MONGO_URI=$(gcloud secrets versions access latest --secret="mongo-cloud-uri")" >> .env
       cp .env ${_SERVICE}_service/
