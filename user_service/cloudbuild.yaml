@@ -83,10 +83,12 @@ steps:
     cd graduation-project-env/${_SERVICE} && \
     git add kubernetes.yaml && \
     git commit -m "Deploying image europe-west3-docker.pkg.dev/$PROJECT_ID/grad/${_SERVICE}:${SHORT_SHA}
+    git status
     Built from commit ${COMMIT_SHA} of repository grad
     Author: $(git log --format='%an <%ae>' -n 1 HEAD)" && \
     # Push your changes
-    cat /root/.ssh/known_hosts
+    rm ~/.ssh/known_hosts
+    ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
     git push origin ${_SERVICE}_candidate
   volumes:
   - name: 'ssh'
