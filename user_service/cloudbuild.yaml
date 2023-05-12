@@ -87,8 +87,9 @@ steps:
     Built from commit ${COMMIT_SHA} of repository grad
     Author: $(git log --format='%an <%ae>' -n 1 HEAD)" && \
     # Push your changes
-    rm ~/.ssh/known_hosts
-    ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+    cat ~/.ssh/known_hosts
+    ssh-keyscan -t rsa github.com > ~/.ssh/known_hosts
+    cat ~/.ssh/known_hosts
     git push origin ${_SERVICE}_candidate
   volumes:
   - name: 'ssh'
