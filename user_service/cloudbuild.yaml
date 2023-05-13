@@ -28,7 +28,6 @@ steps:
   args:
     - "push"
     - "europe-west3-docker.pkg.dev/$PROJECT_ID/grad/${_SERVICE}:$SHORT_SHA"
-    # [END cloudbuild]
 
 # this step authenticates with github
 - name: 'gcr.io/cloud-builders/git'
