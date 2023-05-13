@@ -15,15 +15,7 @@ spec:
         app: user
     spec:
       nodeSelector:
-        cloud.google.com/compute-class: "Scale-Out"
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-            - matchExpressions:
-              - key: env
-                operator: In
-                values:
-                  - prod
+        cloud.google.com/gke-nodepool: "default-pool"
       containers:
         - name: user
           image: europe-west3-docker.pkg.dev/GOOGLE_CLOUD_PROJECT/grad/user:COMMIT_SHA
