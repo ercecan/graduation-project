@@ -16,7 +16,9 @@ from api.school_api import school_router
 from api.opened_course_api import opened_course_router
 from api.status_api import status_router
 from services.db_service import DBService
-
+from services.redis_service import RedisService
+from services.publisher_service import Publisher
+import pymongo
 
 app = FastAPI()
 
@@ -57,3 +59,35 @@ async def start_database():
 @app.get("/")
 async def root():
     return {"message": "Welcome to Schedule Creator"}
+
+@app.get("/health")
+async def health():
+    msg = {'status': 'UP'}
+    try:
+        r = RedisService()
+        print(r.host)
+        r.set_val('test', 'test')
+        print(r.get_val('test'))
+        msg['redis'] = 'UP'
+    except Exception as e:
+        msg['redis'] = 'DOWN'
+        msg['redis-error'] = str(e)
+    
+    try:
+        db = pymongo.MongoClient(os.getenv('MONGO_URI'))
+        print(db.list_database_names())
+        msg['mongodb'] = 'UP'
+    except Exception as e:
+        msg['mongodb'] = 'DOWN'
+        msg['mongodb-error'] = str(e)
+    
+    try:
+        p = Publisher(queue_name='test')
+        p.send_message(message='test', token='test')
+        msg['rabbitmq'] = 'UP'
+    except Exception as e:
+        msg['rabbitmq'] = 'DOWN'
+        error_msg = e.args[0].exception.strerror
+        msg['rabbitmq-error'] = error_msg
+
+    return JSONResponse(content=msg)
