@@ -13,6 +13,7 @@ steps:
       echo "RABBITMQ_HOST=rabbitmq" >> .env
       echo "RABBITMQ_USERNAME=admin" >> .env
       echo "RABBITMQ_PASSWORD=secretpassword" >> .env
+      echo "REDIS_HOST=redis" >> .env
       cp .env ${_SERVICE}_service/
 
 - name: "gcr.io/cloud-builders/docker"
