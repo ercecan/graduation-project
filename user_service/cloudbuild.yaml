@@ -10,6 +10,9 @@ steps:
       cd graduation-project-env
       echo "JWT_SECRET=$(gcloud secrets versions access latest --secret="jwt-secret-key")" >> .env
       echo "MONGO_URI=$(gcloud secrets versions access latest --secret="mongo-cloud-uri")" >> .env
+      echo "RABBITMQ_HOST=rabbitmq" >> .env
+      echo "RABBITMQ_USERNAME=admin" >> .env
+      echo "RABBITMQ_PASSWORD=secretpassword" >> .env
       cp .env ${_SERVICE}_service/
 
 - name: "gcr.io/cloud-builders/docker"
