@@ -30,7 +30,6 @@ python-multipart==0.0.6
 PyYAML==6.0
 redis==4.5.4
 rfc3986==1.5.0
--e git+https://github.com/ercecan/schedule-creator-common.git@a83c6bbe47044c2e3bfc7b775d8f859c27f3806f#egg=schedule_creator_common
 six==1.16.0
 sniffio==1.3.0
 starlette==0.26.1
