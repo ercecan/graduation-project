@@ -16,7 +16,7 @@ recommendation_service = RecommendationService()
 @recommendation_router.post("/create")
 async def create_recommendation(payload: dict):
     try:
-        recommendation_service.create_recommendation(payload=payload, token='token')
+        await recommendation_service.create_recommendation(payload=payload, token='token')
     except Exception as e:
         print(e)
         raise e
