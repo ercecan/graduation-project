@@ -25,8 +25,10 @@ class Consumer:
 
     async def consume(self):
         try:
-            queue_name = "scheduler"
-            connection = await aio_pika.connect_robust( "amqp://guest:guest@127.0.0.1",)
+            queue_name = "recommendation"
+            username = os.getenv('RABBITMQ_USERNAME')
+            password = os.getenv('RABBITMQ_PASSWORD')
+            connection = await aio_pika.connect_robust( host=self.host, login=username, password=password)
             async with connection:
                 # Creating channel
                 channel = await connection.channel()
@@ -46,7 +48,7 @@ class Consumer:
                             json_body = json.loads(message.body)
                             headers = message.headers
                             type = json_body['message']
-                            if type == 'create schedule':
+                            if type == 'create recommendation':
                                 await Consumer.process_incoming_message(msg=json_body, headers=headers)
 
 
@@ -72,17 +74,18 @@ class Consumer:
             json_response = msg
             # process the message here
             print(json_response)
-            # create schedule
+            # create recommendation ########
             id = json_response['id']
-            type_='schedule'
+            type_='recommendation'
             r_key = f"{type_}:{id}"
             r.set_val(key=r_key,val='creating')            
             print(json_response)
             message = json_response['message']
             if message == 'create recommendation':
-                # create schedule ########
+                # create recommendation ########
                 await Consumer.test_create_recommendation(json_response)
-            # schedule completed, update status
+                print('recommendation created')
+            # recommendation completed, update status
             r.set_val(key=r_key,val='completed')
         except Exception as e:
             print(e)
