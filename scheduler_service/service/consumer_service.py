@@ -57,7 +57,7 @@ class Consumer:
                             type = json_body['message']
                             if type == 'create schedule':
                                 await Consumer.process_incoming_message(msg=json_body, headers=headers)
-
+                                await message.ack()
 
                             if queue.name in message.body.decode():
                                 break
@@ -90,7 +90,9 @@ class Consumer:
             message = json_response['message']
             if message == 'create schedule':
                 # create schedule ########
-                await Consumer.test_create_schedule(json_response)
+
+                print('creating schedule')
+                #await Consumer.test_create_schedule(json_response)
             # schedule completed, update status
             r.set_val(key=r_key,val='completed')
         except Exception as e:
