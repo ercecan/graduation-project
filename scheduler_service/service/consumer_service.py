@@ -78,9 +78,8 @@ class Consumer:
             # process the message here
             print(json_response)
             # create schedule
-            id = json_response['id']
             type_='schedule'
-            r_key = f"{type_}:{id}"
+            r_key = f"{type_}"
             r.set_val(key=r_key,val='creating')            
             print(json_response)
             message = json_response['message']
@@ -95,6 +94,7 @@ class Consumer:
     @staticmethod
     async def test_create_schedule(createScheduleDto):
         try:
+            print("creating schedule")
             schedule_service = SchedulerService(get_ITU_constraints())
             create_schedule_dto = createScheduleDto
             term = Term(year=create_schedule_dto['year'], semester=create_schedule_dto['semester'])

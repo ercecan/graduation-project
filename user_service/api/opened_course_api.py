@@ -1,9 +1,7 @@
 from fastapi import APIRouter
-from models.course import OpenedCourse, Course
 from services.opened_course_db_service import OpenedCourseDBService
 from services.course_db_service import CourseDBService
 from dtos.course_dto import OpenedCourseDto
-from models.time import Term, TimeSlot
 from utils.opened_course_utils import create_course_from_dto, create_opened_course_from_dto
 
 opened_course_router = APIRouter(

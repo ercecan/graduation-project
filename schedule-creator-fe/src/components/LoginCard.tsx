@@ -21,15 +21,14 @@ const StyledContainer = styled.div`
 const LoginCard = (): JSX.Element => {
   const [valid, setValid] = useState(true);
   const navigate = useNavigate();
-  const url = "http://localhost:8000/api/user/register";
+  const url = "http://localhost:8000/api/student/login";
 
   const onFinish = async (values: any) => {
-    console.log(values);
     const response = await axios.post(url, values);
-    console.log(response);
+    sessionStorage.setItem("student_db_id", response.data.user_id);
     if (response.status === 200) {
       setValid(true);
-      navigate("/panel");
+      navigate("/home");
     } else {
       setValid(false);
     }

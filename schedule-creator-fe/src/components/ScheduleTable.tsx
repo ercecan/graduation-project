@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Space, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import CreateScheduleComponent from './CreateScheduleComponent';
 import styled from 'styled-components';
+import axios from 'axios';
 
 const Container = styled.div`
   display: flex;
@@ -74,33 +75,29 @@ const columns: ColumnsType<DataType> = [
   },
 ];
 
-const data: DataType[] = [
-  {
-    key: '1',
-    name: 'Ömer Schedule',
-    date: new Date('2023-04-12T09:30:00'),
-    preferences: ['Day Preference', 'Time Preference'],
-  },
-  {
-    key: '2',
-    name: 'Barış Schedule',
-    date: new Date('2023-03-12T07:30:00'),
-    preferences: ['Day Preference'],
-  },
-  {
-    key: '3',
-    name: 'Erce Schedule',
-    date: new Date('2022-12-05T15:30:00'),
-    preferences: ['Time Preference'],
-  },
-];
-
 const ScheduleTable = () => {
-  // TODO
+  const [scheduleData, setScheduleData] = useState<DataType[]>();
+  const [loading, setLoading] = useState(true);
+  const student_id = sessionStorage.getItem("student_db_id");
+  useEffect(() => {
+    axios.post("http://0.0.0.0:8000/api/schedule/all", {
+    student_id: student_id, "term" : {"semester": "fall", "year": 2023}}).then((response) => {
+      sessionStorage.setItem("schedules", JSON.stringify(response.data));
+      setScheduleData(response.data.map((data:any, index: any) => {
+        return ({
+          key: index,
+          name: data.name,
+          date: new Date(),
+          preferences: data.preferences.map((pref:any) => pref.type.charAt(0).toUpperCase() + pref.type.slice(1) + " Preference")
+        } as DataType)
+      }))
+    }).then(() => setLoading(false));
+  }, []);
+
   return (
   <Container>
     <CreateScheduleComponent />
-    <Table columns={columns} dataSource={data} style={{display: "flex", width: "100%"}}/>
+    <Table columns={columns} pagination={{pageSize: 5}}  dataSource={scheduleData} loading={loading}  style={{display: "flex", width: "100%"}}/>
   </Container>
   )
 }

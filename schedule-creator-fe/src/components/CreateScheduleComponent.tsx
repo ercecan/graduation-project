@@ -32,7 +32,6 @@ const App: React.FC = () => {
       <Form.List name="users">
         {(fields, { add, remove }) => {
           if (fields.length === 0) {
-            console.log("fields");
             setCurrentFilled(true);
           }
           return (
