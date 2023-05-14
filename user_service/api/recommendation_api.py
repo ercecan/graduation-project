@@ -13,7 +13,7 @@ recommendation_service = RecommendationService()
 
 
 
-@recommendation_router.post("/")
+@recommendation_router.post("/create")
 async def create_recommendation(payload: dict):
     try:
         recommendation_service.create_recommendation(payload=payload, token='token')
