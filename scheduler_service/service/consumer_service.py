@@ -57,7 +57,6 @@ class Consumer:
                             type = json_body['message']
                             if type == 'create schedule':
                                 await Consumer.process_incoming_message(msg=json_body, headers=headers)
-                                await message.ack()
 
                             if queue.name in message.body.decode():
                                 break
