@@ -9,6 +9,8 @@ RUN apt-get update && apt-get install -y \
     git \
     && rm -rf /var/lib/apt/lists/*
 
+EXPOSE 8001
+
 # Make /app as a working directory in the container# Copy requirements from host, to docker container in /app
 WORKDIR /app
 
