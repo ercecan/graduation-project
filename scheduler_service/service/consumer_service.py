@@ -10,6 +10,8 @@ from service.scheduler_service import SchedulerService
 from services.schedule_db_service import ScheduleDBService
 from models.time import Term
 import asyncio
+from dotenv import load_dotenv
+load_dotenv()
 
 
 r = RedisService()
@@ -31,7 +33,9 @@ class Consumer:
     async def consume(self):
         try:
             queue_name = "scheduler"
-            connection = await aio_pika.connect_robust( "amqp://guest:guest@127.0.0.1",)
+            username = os.getenv('RABBITMQ_USERNAME')
+            password = os.getenv('RABBITMQ_PASSWORD')
+            connection = await aio_pika.connect_robust( host=self.host, login=username, password=password)
             async with connection:
                 # Creating channel
                 channel = await connection.channel()
