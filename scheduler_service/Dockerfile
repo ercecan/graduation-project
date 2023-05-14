@@ -21,4 +21,7 @@ RUN pip install -r requirements.txt
 # Copy everything from current directory to /app in the container
 ADD . /app
 RUN pip install $COMMON_URL
+RUN pip uninstall bson
+RUN pip uninstall pymongo
+RUN pip install pymongo
 CMD ["python", "main.py"]
