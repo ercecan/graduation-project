@@ -21,7 +21,7 @@ def create_opened_course_from_dto(opened_course: OpenedCourseDto, course_id: str
     
     classroom = None
     if opened_course.classroom:
-        classroom = Classroom(name=opened_course.classroom['name'], building=opened_course.classroom['building'])
+        classroom = Classroom(room=opened_course.classroom['room'], building=opened_course.classroom['building'])
     opened_course = OpenedCourse(course_id=course_id, term=term, time_slot=time_slot, classroom=classroom,
                                  capacity=opened_course.capacity, teaching_method=opened_course.teaching_method)
     return opened_course
