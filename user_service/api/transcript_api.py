@@ -7,14 +7,14 @@ from models.time import Term
 
 from utils.transcript import extract_courses
 
-status_router = APIRouter(
+transcript_router = APIRouter(
     prefix="/api/transcript",
-    tags=["Status"],
+    tags=["Transcript"],
     responses={404: {"description": "Not found"}},
 )
 
 
-@status_router.post("/")
+@transcript_router.post("/")
 async def upload_and_process_transcript(student_id: str, transcript: UploadFile = File(...)):
     try:
         fname = f"{student_id}_transcript.pdf"
