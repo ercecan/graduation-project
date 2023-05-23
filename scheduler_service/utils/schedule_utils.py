@@ -1,6 +1,6 @@
 from typing import List, Any
 from models.preferences import DayPreference, TimePreference, InstructorPreference
-from models.constraints import MajorConstraint, TimeSlotConstraint, YearConstraint, CapacityConstraint, PrerequisitiesConstraint
+from models.constraints import MajorConstraint, TimeSlotConstraint, YearConstraint, CapacityConstraint, PrerequisitiesConstraint, CourseConstraint
 
 def create_preferences(preferences: List[Any]):
     preferences_ = []
@@ -14,4 +14,4 @@ def create_preferences(preferences: List[Any]):
     return preferences_
 
 def get_ITU_constraints():
-    return [MajorConstraint(), TimeSlotConstraint(), YearConstraint(), CapacityConstraint(), PrerequisitiesConstraint()]
+    return [MajorConstraint(), TimeSlotConstraint(), YearConstraint(), CourseConstraint(), PrerequisitiesConstraint(), CapacityConstraint()]

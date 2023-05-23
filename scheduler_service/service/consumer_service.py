@@ -8,12 +8,12 @@ from utils.schedule_utils import create_preferences, get_ITU_constraints
 from dtos.schedule_dto import ScheduleDto
 from service.scheduler_service import SchedulerService
 from services.schedule_db_service import ScheduleDBService
+from services.school_db_service import SchoolDBService
 from models.time import Term
 import asyncio
 
 
 r = RedisService()
-schedule_service = SchedulerService(get_ITU_constraints)
 
 class Consumer:
     def __init__(self,  queue_name: str):
@@ -95,12 +95,16 @@ class Consumer:
     async def test_create_schedule(createScheduleDto):
         try:
             print("creating schedule")
-            schedule_service = SchedulerService(get_ITU_constraints())
+            major_plan = await SchoolDBService().get_major_plan_by_name(school_name=createScheduleDto['school_name'], major_plan_name=createScheduleDto['major'])
+            schedule_service = SchedulerService(get_ITU_constraints(), major_plan)
             create_schedule_dto = createScheduleDto
             term = Term(year=create_schedule_dto['year'], semester=create_schedule_dto['semester'])
             preferences = create_preferences(create_schedule_dto['preferences'])
+            print(preferences)
             student = await schedule_service.create_student_dto(create_schedule_dto["_id"])
-            base_schedules = await schedule_service.create_base_schedules(student, term)
+            print(student)
+            base_schedules = await schedule_service.create_base_schedules(student, term, create_schedule_dto["_id"])
+            print(base_schedules)
             scored_schedules = await schedule_service.score_base_schedules(base_schedules, preferences=preferences)
             best_schedules = schedule_service.select_best_five_schedules(scored_schedules)
             response = await schedule_service.create_schedule_objects(student_id=create_schedule_dto['_id'], base_schedules=best_schedules, term=term, preferences=create_schedule_dto["preferences"])

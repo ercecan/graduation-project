@@ -2,6 +2,7 @@ from services.opened_course_db_service import OpenedCourseDBService
 from services.student_db_service import StudentDBService
 from services.csp_service import CSP
 from services.schedule_db_service import ScheduleDBService
+from services.school_db_service import SchoolDBService
 from models.preferences import Preference
 from models.schedule import Schedule
 from typing import List, Any
@@ -9,14 +10,17 @@ from dtos.student_dto import StudentSearchDto
 from dtos.schedule_dto import ScheduleDto
 from service.preference_scorer import PreferenceScorer
 from models.time import Term
+from enums.grades import Grades
+import asyncio
 
 class SchedulerService:
 
-    def __init__(self, constraints):
+    def __init__(self, constraints, major_plan):
         self.student_db_service = StudentDBService()
-        self.course_db_service = OpenedCourseDBService()
+        self.opened_course_db_service = OpenedCourseDBService()
         self.schedule_db_service = ScheduleDBService()
         self.constraints = constraints
+        self.major_plan = major_plan
     
     async def create_student_dto(self, student_id: str) -> StudentSearchDto:
         student = await self.student_db_service.get_student_by_id(student_id)
@@ -29,18 +33,29 @@ class SchedulerService:
         student_dto.taken_courses = taken_courses
         return student_dto
     
-    async def create_base_schedules(self, student_dto: StudentSearchDto, term: Term) -> List[Any]:
-        remaining_courses = await self.student_db_service.get_remaining_courses_ids(student_dto.student_id)
-        opened_courses = await self.course_db_service.get_opened_courses_by_course_ids(remaining_courses, term)
-
+    async def create_base_schedules(self, student_dto: StudentSearchDto, term: Term, id: str) -> List[Any]:
+        remaining_courses = await self.student_db_service.get_remaining_courses_ids(id)
+        # remaining_course_objects = [course for course in self.major_plan.courses if str(course.id) in remaining_courses]
+        # remaining_courses = []
+        # for course in remaining_course_objects:
+        #     if course.prereqs == None or course.prereqs == []:
+        #         remaining_courses.append(str(course.id))
+        #     else:
+        #         for prereq in course.prereqs:
+        #             for taken_course in student_dto.taken_courses:
+        #                 if prereq == taken_course.course.code and taken_course.grade <= Grades.DD:
+        #                     remaining_courses.append(str(course.id))
+        # print(remaining_courses)
+        opened_courses = await self.opened_course_db_service.get_opened_courses_by_course_ids(remaining_courses, term)
         domains = {}
         for variable in opened_courses:
             domains[variable] = [True, False]
         csp_service = CSP(variables=opened_courses, domains=domains)
         for c in self.constraints:
             csp_service.add_constraint(c)
-
+        print("started")
         csp_service.backtracking_search(student=student_dto)
+        print("asdasdasdasdasdasdasdasd")
         return csp_service.get_all_possible_schedules()
 
 
