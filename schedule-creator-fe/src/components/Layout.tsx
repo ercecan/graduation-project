@@ -76,7 +76,7 @@ const MyLayout = (props: LayoutProps) => {
       <Sider
         collapsible
         collapsed={collapsed}
-        onCollapse={value => setCollapsed(value)}
+        onCollapse={(value) => setCollapsed(value)}
       >
         <div style={{ margin: '16px 0' }}>
           <Image src={logo} width={50} height={50} preview={false} />
@@ -89,15 +89,13 @@ const MyLayout = (props: LayoutProps) => {
           defaultSelectedKeys={['1']}
           mode="inline"
           items={items}
-          onClick={event => navigate(navigationMap[event.key].toString())}
+          onClick={(event) => navigate(navigationMap[event.key].toString())}
         />
       </Sider>
       <Layout className="site-layout">
         <Content style={{ margin: '0 16px' }}>
           <Breadcrumb style={{ margin: '16px 0' }}></Breadcrumb>
-          <div style={{ padding: 24, background: colorBgContainer }}>
-            {props.children}
-          </div>
+          <div style={{ background: colorBgContainer }}>{props.children}</div>
         </Content>
         <Footer style={{ textAlign: 'center' }}>
           ITU Scheduler ©2023 Created by ITU
