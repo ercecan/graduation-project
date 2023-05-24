@@ -4,12 +4,12 @@ import aio_pika
 import json
 from pika.exceptions import ConnectionClosedByBroker, AMQPChannelError, AMQPConnectionError
 from services.redis_service import RedisService
+from services.school_db_service import SchoolDBService
 from .recommendation import RecommendationService
 from utils.constraints_util import get_ITU_constraints
 
 
 r = RedisService()
-recommendation_service = RecommendationService(get_ITU_constraints())
 
 class Consumer:
     def __init__(self,  queue_name: str):
@@ -78,6 +78,8 @@ class Consumer:
 
             message = json_response['message']
             if message == 'create recommendation':
+                # major = await SchoolDBService().get_major_plan_by_name(json_response['school_name'], json_response['major'])
+                recommendation_service = RecommendationService(constraints=get_ITU_constraints())
                 student_dto = await recommendation_service.create_student_dto(json_response['student_id'])
                 student_dto = await recommendation_service.add_schedule_to_student(student=student_dto, schedule_id=json_response['schedule_id'],
                                                                               semester=json_response['semester'], year=json_response['year'], failed_courses=json_response['failed_courses'])

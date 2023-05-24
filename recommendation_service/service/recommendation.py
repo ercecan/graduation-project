@@ -12,6 +12,7 @@ from services.opened_course_db_service import OpenedCourseDBService
 from utils.semester_util import next_semester
 from enums.grades import Grades
 from models.time import Term
+from dtos.course_dto import TakenCourseDto
 
 
 class RecommendationService:
@@ -37,14 +38,20 @@ class RecommendationService:
     async def add_schedule_to_student(self, student: StudentSearchDto, schedule_id: str, semester: Semesters, year: int, failed_courses: List[str]) -> StudentSearchDto:
         schedule = await self.schedule_db_service.get_schedule_by_id(schedule_id)
         schedule_courses = schedule.courses
-        student.taken_courses = [TakenCourse(course_id=str(course.course.id), grade=Grades.CC, term=Term(year=year, semester=semester))
+        taken_courses = [TakenCourseDto(course=course.course, grade=Grades.CC, term=Term(year=year, semester=semester))
                                  if course.id not in failed_courses else
-                                 TakenCourse(course_id=str(course.course.id), grade=Grades.FF, term=Term(year=year, semester=semester))
+                                 TakenCourseDto(course=course.course, grade=Grades.FF, term=Term(year=year, semester=semester))
                                  for course in schedule_courses]
+        student.taken_courses.extend(taken_courses)
+        failed_course_object_ids = []
+        for course_id in failed_courses:
+            for course in schedule_courses:
+                if course.id == course_id:
+                    failed_course_object_ids.append(str(course.course.id))
         remaining_courses = [] 
         for course_id in student.remaining_courses:
-            if course_id in [schedule_course.course.id for schedule_course in schedule_courses]:
-                if course_id in failed_courses:
+            if course_id in [str(schedule_course.course.id) for schedule_course in schedule_courses]:
+                if course_id in failed_course_object_ids:
                     remaining_courses.append(course_id)
             else:
                 remaining_courses.append(course_id)
@@ -59,9 +66,9 @@ class RecommendationService:
             semester_next = next_semester(current_semester)
             year = year + 1 if semester_next == Semesters.SPRING.value else year
             courses = await self.course_db_service.get_courses_by_ids(student.remaining_courses)
-            next_semester_courses = [course for course in courses if course.semester.value == semester_next or course.semester == Semesters.FALL_AND_SPRING.value or course.semester == Semesters.ALL.value]
-            min_semester = min([course.recommended_semester for course in next_semester_courses])
-            next_semester_courses = next_semester_courses.filter(lambda course: course.recommended_semester <= min_semester + 2)
+            next_semester_courses = [course for course in courses if course.semester.value == semester_next or course.semester.value == Semesters.FALL_AND_SPRING.value or course.semester.value == Semesters.ALL.value]
+            min_semester = min([course.recommended_semester for course in next_semester_courses]) + 2
+            next_semester_courses = list(filter(lambda course: course.recommended_semester <= min_semester, next_semester_courses))
             domains = {}
             for variable in next_semester_courses:
                 domains[variable] = [True, False]
@@ -69,7 +76,6 @@ class RecommendationService:
             csp_service = CSP(variables=next_semester_courses, domains=domains)
             for c in self.constraints:
                 csp_service.add_constraint(c)
-            
             csp_service.backtracking_search(student=student)
             first_schedule = csp_service.get_all_possible_schedules()[0]
             taken_course_ids = [str(course.id) for course in first_schedule[0]]
