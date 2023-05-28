@@ -107,7 +107,7 @@ class Consumer:
             print(base_schedules)
             scored_schedules = await schedule_service.score_base_schedules(base_schedules, preferences=preferences)
             best_schedules = schedule_service.select_best_five_schedules(scored_schedules)
-            response = await schedule_service.create_schedule_objects(student_id=create_schedule_dto['_id'], base_schedules=best_schedules, term=term, preferences=create_schedule_dto["preferences"])
+            response = await schedule_service.create_schedule_objects(student_id=create_schedule_dto['_id'], base_schedules=best_schedules, term=term, preferences=create_schedule_dto["preferences"], schedule_name=create_schedule_dto["schedule_name"])
             print(response)
         except Exception as e:
             print(e)

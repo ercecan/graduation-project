@@ -14,4 +14,4 @@ def create_preferences(preferences: List[Any]):
     return preferences_
 
 def get_ITU_constraints():
-    return [MajorConstraint(), TimeSlotConstraint(), YearConstraint(), CourseConstraint(), PrerequisitiesConstraint(), CapacityConstraint()]
+    return [MajorConstraint(), TimeSlotConstraint(), YearConstraint(), CourseConstraint(), CapacityConstraint()]
