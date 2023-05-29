@@ -66,6 +66,7 @@ async def upload_and_process_transcript(student_id: str, transcript: UploadFile 
             tc_dict['term'] = tc.term.dict()
             tc_dict['term']['semester'] = tc.term.semester.value
             tc_dict['term']['year'] = tc.term.year
+            tc_dict['student_id'] = student_id
             tcs.append(tc_dict)
         tc_db.insert_many(tcs)
         
