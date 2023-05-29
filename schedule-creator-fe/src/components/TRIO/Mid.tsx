@@ -40,16 +40,6 @@ const Mid = (props: any): JSX.Element => {
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
-    // console.log(term);
-    // console.log(
-    //   Object.keys({
-    //     ...items,
-    //     course_name: false,
-    //     course_name_2: true,
-    //   })
-    //     .filter((key: any) => items[key as keyof typeof items] === true)
-    //     .map((name) => name_to_id.get(name)),
-    // );
 
     axios
       .post('http://0.0.0.0:8000/api/recommendation', {

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import ScheduleDetail from '../components/ScheduleDetail';
 import FuturePlan from '../components/FuturePlan';
 import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 const StyledContainer = styled.div`
   display: flex;
@@ -47,14 +48,20 @@ function getDayIndex(dayName: string): number {
 
 const Schedule = (): JSX.Element => {
   const [valid, setValid] = useState(true);
-  const [counter, setCounter] = useState(0);
+  const [schedule, setSchedule] = useState<{
+    courses: any[];
+  } | null>(null);
 
   const jsonString = sessionStorage.getItem('schedules');
   const schedules = jsonString ? JSON.parse(jsonString) : '';
   const { id } = useParams<{ id: string }>();
-  const schedule = schedules.find(
-    (schedule: { id: string | undefined }) => schedule.id === id,
-  );
+  useEffect(() => {
+    axios
+      .get(`http://0.0.0.0:8000/api/schedule?schedule_id=${id}`)
+      .then((res) => {
+        setSchedule(res.data);
+      });
+  }, []);
 
   const data: {
     name: string;
@@ -89,19 +96,21 @@ const Schedule = (): JSX.Element => {
 
   const openedCourses: any[] = [];
 
-  schedule.courses.map((course: any) => {
-    openedCourses.push(course);
-    course.time_slot.map((slot: any) => {
-      const day = slot.day;
-      const elem = {
-        startTime: timeStringToFloat(slot.start_time),
-        endTime: timeStringToFloat(slot.end_time),
-        title: course.course.name,
-        description: course.course.description,
-      };
-      data[getDayIndex(day)].events.push(elem);
+  if (schedule && schedule.courses) {
+    schedule.courses.map((course: any) => {
+      openedCourses.push(course);
+      course.time_slot.map((slot: any) => {
+        const day = slot.day;
+        const elem = {
+          startTime: timeStringToFloat(slot.start_time),
+          endTime: timeStringToFloat(slot.end_time),
+          title: course.course.name,
+          description: course.course.description,
+        };
+        data[getDayIndex(day)].events.push(elem);
+      });
     });
-  });
+  }
 
   return (
     <StyledContainer>
@@ -117,7 +126,9 @@ const Schedule = (): JSX.Element => {
         <StyledText>Fail Scenarios</StyledText>
         <StyledText>Future Plan</StyledText>
       </div>
-      <FuturePlan openedCourses={openedCourses} schedule={schedule} />
+      {schedule && (
+        <FuturePlan openedCourses={openedCourses} schedule={schedule} />
+      )}
     </StyledContainer>
   );
 };
