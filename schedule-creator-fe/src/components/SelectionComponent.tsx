@@ -23,7 +23,7 @@ const SelectionComponent = (props: {
   name: string | number;
   restField: JSX.IntrinsicAttributes & FormItemProps<any>;
   remove: Function;
-  setCurrentFilled: Function;
+  onFieldRemoved: Function;
 }) => {
   const [isFirstFilled, setIsFirstFilled] = useState(false);
   const [isSecondFilled, setIsSecondFilled] = useState(false);
@@ -34,7 +34,7 @@ const SelectionComponent = (props: {
 
   useEffect(() => {
     if (isThirdFilled) {
-      props.setCurrentFilled(true);
+      props.onFieldRemoved(true);
     }
   }, [isThirdFilled]);
   const s = 'Day Preferences';
@@ -85,11 +85,6 @@ const SelectionComponent = (props: {
                 {key}
               </Select.Option>
             ))}
-            {/* <Select.Option value="Monday">Monday</Select.Option>
-            <Select.Option value="Tuesday">Tuesday</Select.Option>
-            <Select.Option value="Wednesday">Wednesday</Select.Option>
-            <Select.Option value="Thursday">Thursday</Select.Option>
-            <Select.Option value="Friday">Friday</Select.Option> */}
           </Select>
         </Form.Item>
       )}
@@ -114,7 +109,11 @@ const SelectionComponent = (props: {
           </Select>
         </Form.Item>
       )}
-      <MinusCircleOutlined onClick={() => props.remove(name)} />
+      <MinusCircleOutlined
+        onClick={() => {
+          props.remove(name);
+        }}
+      />
     </Space>
   );
 };

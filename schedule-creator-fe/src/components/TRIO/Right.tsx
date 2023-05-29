@@ -12,6 +12,12 @@ const StyledContainer = styled.div`
     padding: 20px;
   }
 
+  .no-data {
+    text-align: center;
+    color: gray;
+    font-style: italic;
+  }
+
   h2 {
     margin-bottom: 10px;
   }
@@ -30,25 +36,27 @@ const StyledContainer = styled.div`
 `;
 
 const Right = (props: any): JSX.Element => {
-  const [valid, setValid] = useState(true);
-  const [counter, setCounter] = useState(0);
   console.log(props);
   return (
     <StyledContainer>
-      {props.plan.map((planItem: any, index: any) => (
-        <div className="schedule-item" key={index}>
-          <h2>
-            Schedule for {planItem.term.semester} {planItem.term.year}
-          </h2>
-          <ul>
-            {planItem.course_names.map((course: any, courseIndex: any) => (
-              <li className="course-item" key={courseIndex}>
-                {course}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+      {props.plan && props.plan.length > 0 ? (
+        props.plan.map((planItem: any, index: any) => (
+          <div className="schedule-item" key={index}>
+            <h2>
+              Schedule for {planItem.term.semester} {planItem.term.year}
+            </h2>
+            <ul>
+              {planItem.course_names.map((course: any, courseIndex: any) => (
+                <li className="course-item" key={courseIndex}>
+                  {course}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      ) : (
+        <div className="no-data">No data available</div>
+      )}
     </StyledContainer>
   );
 };

@@ -1,15 +1,13 @@
-from aiohttp import web
+import json
+
+from dtos.student_dto import StudentLoginDto, StudentRegisterDto
 from enums.grades import Grades
 from fastapi import APIRouter, HTTPException, Response
-from dtos.student_dto import StudentLoginDto, StudentRegisterDto
 from models.course import TakenCourse
 from models.time import Term
 from service.student_service import StudentService
-import json
 from services.course_db_service import CourseDBService
-
 from services.student_db_service import StudentDBService
-
 
 student_router = APIRouter(
     prefix="/api/student",

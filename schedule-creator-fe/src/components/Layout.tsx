@@ -67,7 +67,6 @@ const MyLayout = (props: LayoutProps) => {
     return [
       createMenuItem('Home Page', '1', <PieChartOutlined />),
       createMenuItem('Profile & Settings', '2', <UserOutlined />),
-      createMenuItem('Schedules', 'sub1', <FileOutlined />, menuItems),
     ];
   }, []);
 

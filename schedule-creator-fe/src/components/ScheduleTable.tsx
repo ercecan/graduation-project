@@ -16,251 +16,15 @@ const Container = styled.div`
   }
 `;
 
-const schedules = [
-  {
-    id: '644fe06deb6497fd5807c7f2',
-    name: 'Schedule 0',
-    courses: [
-      {
-        id: '644fbd35ed40cb871392f17b',
-        course: {
-          _id: '644fb5dccddb3dc51acfa068',
-          name: 'Database Systems',
-          code: 'BLG232E',
-          crn: '23150',
-          ects: 8,
-          credits: 4,
-          language: 'English',
-          major_restrictions: ['BLG', 'BLGE'],
-          prereqs: null,
-          year_restrictions: [2, 3],
-          description: 'db mock description',
-          semester: 'fall',
-          recommended_semester: 5,
-          instructor: 'Ali Çakmak',
-          is_elective: false,
-          tag: null,
-        },
-        time_slot: [
-          {
-            day: 'Monday',
-            start_time: '08:30',
-            end_time: '11:30',
-          },
-          {
-            day: 'Wednesday',
-            start_time: '12:30',
-            end_time: '14:30',
-          },
-        ],
-        capacity: 70,
-        classroom: null,
-        teaching_method: 'online',
-      },
-    ],
-    term: {
-      semester: 'fall',
-      year: 2023,
-    },
-    score: 5,
-    future_plan: [
-      {
-        course_names: ['Son dönemden ders - I', 'Son dönemden ders - II'],
-        term: { semester: 'fall', year: 2023 },
-      },
-      {
-        course_names: ['Son dönemden ders - III', 'Son dönemden ders - IV'],
-        term: { semester: 'spring', year: 2024 },
-      },
-    ],
-    preferences: [
-      {
-        type: 'day',
-        value: 'TUESDAY',
-        priority: 5,
-      },
-      {
-        type: 'day',
-        value: 'FRIDAY',
-        priority: 1,
-      },
-      {
-        type: 'sample',
-        value: 'sample',
-        priority: 3,
-      },
-    ],
-    student_id: '644fd664138dd370b4eec6ac',
-  },
-  {
-    id: '644fe1c0c36690706b9a21b1',
-    name: 'Schedule 0',
-    courses: [
-      {
-        id: '644fbd35ed40cb871392f17b',
-        course: {
-          _id: '644fb5dccddb3dc51acfa068',
-          name: 'Database Systems',
-          code: 'BLG232E',
-          crn: '23150',
-          ects: 8,
-          credits: 4,
-          language: 'English',
-          major_restrictions: ['BLG', 'BLGE'],
-          prereqs: null,
-          year_restrictions: [2, 3],
-          description: 'db mock description',
-          semester: 'fall',
-          recommended_semester: 5,
-          instructor: 'Ali Çakmak',
-          is_elective: false,
-          tag: null,
-        },
-        time_slot: [
-          {
-            day: 'Monday',
-            start_time: '08:30',
-            end_time: '11:30',
-          },
-          {
-            day: 'Wednesday',
-            start_time: '12:30',
-            end_time: '14:30',
-          },
-        ],
-        capacity: 70,
-        classroom: null,
-        teaching_method: 'online',
-      },
-    ],
-    term: {
-      semester: 'fall',
-      year: 2023,
-    },
-    score: 5,
-    future_plan: null,
-    preferences: [
-      {
-        type: 'day',
-        value: 'TUESDAY',
-        priority: 5,
-      },
-    ],
-    student_id: '644fd664138dd370b4eec6ac',
-  },
-  {
-    id: '644fe1cac36690706b9a21b2',
-    name: 'Schedule 0',
-    courses: [
-      {
-        id: '644fbd35ed40cb871392f17b',
-        course: {
-          _id: '644fb5dccddb3dc51acfa068',
-          name: 'Database Systems',
-          code: 'BLG232E',
-          crn: '23150',
-          ects: 8,
-          credits: 4,
-          language: 'English',
-          major_restrictions: ['BLG', 'BLGE'],
-          prereqs: null,
-          year_restrictions: [2, 3],
-          description: 'db mock description',
-          semester: 'fall',
-          recommended_semester: 5,
-          instructor: 'Ali Çakmak',
-          is_elective: false,
-          tag: null,
-        },
-        time_slot: [
-          {
-            day: 'Monday',
-            start_time: '08:30',
-            end_time: '11:30',
-          },
-          {
-            day: 'Wednesday',
-            start_time: '12:30',
-            end_time: '14:30',
-          },
-        ],
-        capacity: 70,
-        classroom: null,
-        teaching_method: 'online',
-      },
-    ],
-    term: {
-      semester: 'fall',
-      year: 2023,
-    },
-    score: 5,
-    future_plan: null,
-    preferences: [
-      {
-        type: 'day',
-        value: 'TUESDAY',
-        priority: 5,
-      },
-    ],
-    student_id: '644fd664138dd370b4eec6ac',
-  },
-  {
-    id: '644fe1d2c36690706b9a21b3',
-    name: 'Schedule 0',
-    courses: [
-      {
-        id: '644fbd35ed40cb871392f17b',
-        course: {
-          _id: '644fb5dccddb3dc51acfa068',
-          name: 'Database Systems',
-          code: 'BLG232E',
-          crn: '23150',
-          ects: 8,
-          credits: 4,
-          language: 'English',
-          major_restrictions: ['BLG', 'BLGE'],
-          prereqs: null,
-          year_restrictions: [2, 3],
-          description: 'db mock description',
-          semester: 'fall',
-          recommended_semester: 5,
-          instructor: 'Ali Çakmak',
-          is_elective: false,
-          tag: null,
-        },
-        time_slot: [
-          {
-            day: 'Monday',
-            start_time: '08:30',
-            end_time: '11:30',
-          },
-          {
-            day: 'Wednesday',
-            start_time: '12:30',
-            end_time: '14:30',
-          },
-        ],
-        capacity: 70,
-        classroom: null,
-        teaching_method: 'online',
-      },
-    ],
-    term: {
-      semester: 'fall',
-      year: 2023,
-    },
-    score: 5,
-    future_plan: null,
-    preferences: [
-      {
-        type: 'day',
-        value: 'TUESDAY',
-        priority: 5,
-      },
-    ],
-    student_id: '644fd664138dd370b4eec6ac',
-  },
-];
+const preferenceColors: { [key: string]: string } = {
+  'Time Preference': 'green',
+  'Day Preference': 'geekblue',
+  // Add more preferences and their corresponding colors as needed
+};
+
+function wait(delay: number) {
+  return new Promise((resolve) => setTimeout(resolve, delay));
+}
 
 interface DataType {
   id: string;
@@ -273,11 +37,24 @@ interface DataType {
 const ScheduleTable = () => {
   const [scheduleData, setScheduleData] = useState<DataType[]>();
   const [loading, setLoading] = useState(true);
+  const [showSuccessNotification, setShowSuccessNotification] = useState(false);
 
   const navigate = useNavigate();
 
   const handlePreviewClick = (id: string) => {
     navigate(`/schedule/${id}`);
+  };
+
+  const handleDeleteClick = (id: string) => {
+    axios
+      .delete('http://0.0.0.0:8000/api/schedule/delete/' + id)
+      .then(async (res) => {
+        if (res.status === 200) {
+          setShowSuccessNotification(true);
+          await wait(4000);
+          setShowSuccessNotification(false);
+        }
+      });
   };
 
   const columns: ColumnsType<DataType> = [
@@ -299,13 +76,10 @@ const ScheduleTable = () => {
       dataIndex: 'preferences',
       render: (_, { preferences }) => (
         <>
-          {preferences.map((preference) => {
-            let color = preference.length > 5 ? 'geekblue' : 'green';
-            if (preference === 'Time Preference') {
-              color = 'green';
-            }
+          {preferences.map((preference: string, index: number) => {
+            const color = preferenceColors[preference] || 'green';
             return (
-              <Tag color={color} key={preference}>
+              <Tag color={color} key={preference + index}>
                 {preference.toUpperCase()}
               </Tag>
             );
@@ -329,7 +103,13 @@ const ScheduleTable = () => {
       key: 'delete',
       render: (_, record) => (
         <Space size="middle">
-          <a>Delete</a>
+          <a
+            onClick={() => {
+              handleDeleteClick(record.id);
+            }}
+          >
+            Delete
+          </a>
         </Space>
       ),
     },
@@ -343,21 +123,14 @@ const ScheduleTable = () => {
         term: { semester: 'fall', year: 2023 },
       })
       .then((response) => {
-        sessionStorage.setItem(
-          'schedules',
-          JSON.stringify(
-            // response.data
-            schedules,
-          ),
-        );
+        sessionStorage.setItem('schedules', JSON.stringify(response.data));
         setScheduleData(
-          // response.data.
-          schedules.map((data: any, index: any) => {
+          response.data.map((data: any, index: any) => {
             return {
               id: data.id,
               key: index,
               name: data.name,
-              date: new Date(),
+              date: new Date(data.time),
               preferences: data.preferences.map(
                 (pref: any) =>
                   pref.type.charAt(0).toUpperCase() +
@@ -369,11 +142,31 @@ const ScheduleTable = () => {
         );
       })
       .then(() => setLoading(false));
-  }, []);
+  }, [showSuccessNotification]);
+
+  const handleTimeOut = () => {
+    setShowSuccessNotification(false);
+  };
 
   return (
     <Container>
       <CreateScheduleComponent />
+      {showSuccessNotification && (
+        <div
+          style={{
+            backgroundColor: 'blue',
+            color: 'white',
+            padding: '10px',
+            borderRadius: '5px',
+            textAlign: 'center',
+            width: '150px',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+          }}
+        >
+          Schedule Deleted
+        </div>
+      )}{' '}
       <Table
         columns={columns}
         pagination={{ pageSize: 5 }}

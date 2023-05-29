@@ -14,12 +14,12 @@ function App() {
     <div className="App">
       <MyLayout>
         <Routes>
-          <Route exact path="/login" element={<Login />} />
-          <Route exact path="/register" element={<Signup />} />
-          <Route exact path="/panel" element={<Panel />} />
-          <Route exact path="/home" element={<ScheduleTable />} />
-          <Route exact path="/profile" element={<Profile />} />
-          <Route exact path="/schedule/:id" element={<Schedule />} />
+          <Route exact path="/" element={<Login />} />
+          <Route path="/register" element={<Signup />} />
+          <Route path="/panel" element={<Panel />} />
+          <Route path="/home" element={<ScheduleTable />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/schedule/:id" element={<Schedule />} />
         </Routes>
       </MyLayout>
     </div>
