@@ -5,7 +5,7 @@ from enums.semesters import Semesters
 from enums.grades import Grades
 from models.time import Term
 import pymongo
-
+from bson.objectid import ObjectId
 from utils.transcript import extract_courses
 
 transcript_router = APIRouter(
@@ -17,6 +17,7 @@ transcript_router = APIRouter(
 m_cli = pymongo.MongoClient(os.getenv("MONGO_URI"))
 courses_db = m_cli['schedule-creator']['courses']
 tc_db = m_cli['schedule-creator']['taken_courses']
+st_db = m_cli['schedule-creator']['students']
 
 
 @transcript_router.post("/")
@@ -68,12 +69,13 @@ async def upload_and_process_transcript(student_id: str, transcript: UploadFile 
             tc_dict['term']['year'] = tc.term.year
             tc_dict['student_id'] = student_id
             tcs.append(tc_dict)
-        tc_db.insert_many(tcs)
         
+        # insert into student's taken courses
+        st_db.update_one({"_id": ObjectId(student_id)}, {"$set": {"taken_courses": tcs}})
+
         # Delete the file
         os.remove(os.path.abspath(fname))
 
-    # Upload the file to S3
     except Exception as e:
         print(e)
         raise e
