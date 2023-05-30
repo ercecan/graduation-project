@@ -7,6 +7,7 @@ from models.time import Term
 import pymongo
 from bson.objectid import ObjectId
 from utils.transcript import extract_courses
+from utils.remaining_course_utils import find_remaining_course_ids, form_taken_courses, get_taken_courses_ids
 
 transcript_router = APIRouter(
     prefix="/api/transcript",
@@ -18,7 +19,7 @@ m_cli = pymongo.MongoClient(os.getenv("MONGO_URI"))
 courses_db = m_cli['schedule-creator']['courses']
 tc_db = m_cli['schedule-creator']['taken_courses']
 st_db = m_cli['schedule-creator']['students']
-
+sc_db = m_cli['schedule-creator']['schools']
 
 @transcript_router.post("/")
 async def upload_and_process_transcript(student_id: str, transcript: UploadFile = File(...)):
@@ -28,51 +29,15 @@ async def upload_and_process_transcript(student_id: str, transcript: UploadFile 
             buffer.write(transcript.file.read())
         # Read lines from the PDF
         courses_by_term = extract_courses(pdf_path=os.path.abspath(fname))
-        taken_courses = []
-        for term in courses_by_term:
-            year = term.split()[0]
-            sem = term.split()[1]
-            semester = Semesters[sem.upper()]
-            term = Term(year=year, semester=semester)
-            codes = []
-            code_grade = {}
-            term_hash = f'{term.year} {term.semester.value}'
-            for course in courses_by_term[term_hash]:
-                code = course["code"]
-                name = course["name"] 
-                letter_grade = course["letter_grade"]
-                if letter_grade == '-':
-                    print(f"Course {code} has no grade")
-                    continue
-                codes.append(code)
-                code_grade[code] = letter_grade
-                
-                course_id = None
-
-            courses = courses_db.find({"code": {"$in": codes}})
-            course_dict = {}
-            
-            for idx, course in enumerate(courses):
-                course_id = str(course["_id"])
-                
-
-                tc = TakenCourse(course_id=course_id, grade=Grades[code_grade[course['code']]], term=term)
-                taken_courses.append(tc)
-                course_dict[course["code"]] = str(course["_id"])
-        # bulk insert taken courses to db
-        tcs = []
-        for tc in taken_courses:
-            tc_dict = tc.dict()
-            tc_dict['grade'] = tc.grade.value
-            tc_dict['term'] = tc.term.dict()
-            tc_dict['term']['semester'] = tc.term.semester.value
-            tc_dict['term']['year'] = tc.term.year
-            tc_dict['student_id'] = student_id
-            tcs.append(tc_dict)
+        # Create taken courses
+        taken_courses = form_taken_courses(courses_by_term=courses_by_term)
+        # get taken courses ids
+        tcs, taken_ids = get_taken_courses_ids(taken_courses=taken_courses, student_id=student_id)
         
-        # insert into student's taken courses
-        st_db.update_one({"_id": ObjectId(student_id)}, {"$set": {"taken_courses": tcs}})
-
+        # find remaining courses
+        remaining_course_ids = find_remaining_course_ids(student_id=student_id, taken_ids=taken_ids)
+        st_db.update_one({'_id': ObjectId(student_id)},{'$set':{'remaining_courses':remaining_course_ids, "taken_courses": tcs}})
+        
         # Delete the file
         os.remove(os.path.abspath(fname))
 
