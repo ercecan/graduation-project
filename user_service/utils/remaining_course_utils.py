@@ -72,3 +72,32 @@ def find_remaining_course_ids(student_id: str, taken_ids: dict):
     remaining_course_ids = list(filter(lambda x: not taken_ids.get(x, False), course_ids))
     return remaining_course_ids
 
+
+def delete_taken_course_by_id(course_id: str, student_id: str):
+    try:
+        # remove from taken_courses
+        st_db.update_one({"_id": ObjectId(student_id)}, {"$pull": {"taken_courses": {"course_id": course_id}}})
+        # add to remaining_courses
+        st_db.update_one({"_id": ObjectId(student_id)}, {"$push": {"remaining_courses": course_id}})
+        return True
+    
+    except Exception as e:
+        print(e)
+        raise e
+
+
+def delete_remaining_course_by_id(course_id: str, student_id: str):
+    try:
+        st_db.update_one({"_id": ObjectId(student_id)}, {"$pull": {"remaining_courses": course_id}})
+        return True
+    except Exception as e:
+        print(e)
+        raise e
+
+def update_taken_course_by_id( student_id: str, course_id: str, grade: str, term):
+    try:
+        st_db.update_one({"_id": ObjectId(student_id), "taken_courses.course_id": course_id}, {"$set": {"taken_courses.$.grade": grade, "taken_courses.$.term": term}})
+        return True
+    except Exception as e:
+        print(e)
+        raise e
