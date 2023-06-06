@@ -67,6 +67,8 @@ class RecommendationService:
             year = year + 1 if semester_next == Semesters.SPRING.value else year
             courses = await self.course_db_service.get_courses_by_ids(student.remaining_courses)
             next_semester_courses = [course for course in courses if course.semester.value == semester_next or course.semester.value == Semesters.FALL_AND_SPRING.value or course.semester.value == Semesters.ALL.value]
+            if len(next_semester_courses) == 0:
+                break
             min_semester = min([course.recommended_semester for course in next_semester_courses]) + 2
             next_semester_courses = list(filter(lambda course: course.recommended_semester <= min_semester, next_semester_courses))
             domains = {}
