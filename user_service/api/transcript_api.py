@@ -1,13 +1,16 @@
 import os
-from fastapi import APIRouter, HTTPException, Response, File, UploadFile
-from models.course import TakenCourse
-from enums.semesters import Semesters
-from enums.grades import Grades
-from models.time import Term
+
 import pymongo
 from bson.objectid import ObjectId
+from enums.grades import Grades
+from enums.semesters import Semesters
+from fastapi import APIRouter, File, HTTPException, Response, UploadFile
+from models.course import TakenCourse
+from models.time import Term
+from utils.remaining_course_utils import (find_remaining_course_ids,
+                                          form_taken_courses,
+                                          get_taken_courses_ids)
 from utils.transcript import extract_courses
-from utils.remaining_course_utils import find_remaining_course_ids, form_taken_courses, get_taken_courses_ids
 
 transcript_router = APIRouter(
     prefix="/api/transcript",

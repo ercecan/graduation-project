@@ -8,6 +8,7 @@ import MyLayout from './components/Layout';
 import Profile from './components/Profile';
 import ScheduleTable from './components/ScheduleTable';
 import Schedule from './pages/Schedule';
+import Courses from './pages/Courses';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/panel" element={<Panel />} />
           <Route path="/home" element={<ScheduleTable />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/courses" element={<Courses />} />
           <Route path="/schedule/:id" element={<Schedule />} />
         </Routes>
       </MyLayout>

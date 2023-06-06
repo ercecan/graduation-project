@@ -1,13 +1,15 @@
-import os
-import pika
-import aio_pika
 import json
-from pika.exceptions import ConnectionClosedByBroker, AMQPChannelError, AMQPConnectionError
+import os
+
+import aio_pika
+import pika
+from pika.exceptions import (AMQPChannelError, AMQPConnectionError,
+                             ConnectionClosedByBroker)
 from services.redis_service import RedisService
 from services.school_db_service import SchoolDBService
-from .recommendation import RecommendationService
 from utils.constraints_util import get_ITU_constraints
 
+from .recommendation import RecommendationService
 
 r = RedisService()
 
