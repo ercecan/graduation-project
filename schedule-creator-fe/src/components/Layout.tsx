@@ -1,6 +1,6 @@
 import React, { ReactNode, useMemo, useState } from 'react';
 import {
-  FileOutlined,
+  BookOutlined,
   PieChartOutlined,
   UserOutlined,
 } from '@ant-design/icons';
@@ -43,6 +43,7 @@ interface NavigationMap {
 const navigationMap: NavigationMap = {
   '1': '/home',
   '2': '/profile',
+  '3': '/courses',
   // "3": '/schedule/1',
   // "4": '/schedule/2',
   // "5": '/schedule/3',
@@ -67,6 +68,7 @@ const MyLayout = (props: LayoutProps) => {
     return [
       createMenuItem('Home Page', '1', <PieChartOutlined />),
       createMenuItem('Profile & Settings', '2', <UserOutlined />),
+      createMenuItem('My Courses', '3', <BookOutlined />),
     ];
   }, []);
 

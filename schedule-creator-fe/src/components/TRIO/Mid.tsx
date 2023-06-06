@@ -45,10 +45,10 @@ const Mid = (props: any): JSX.Element => {
       .post('http://0.0.0.0:8000/api/recommendation', {
         message: 'create recommendation',
         schedule_id: schedule.id,
-        student_id: sessionStorage.getItem('student_id'),
+        student_id: sessionStorage.getItem('student_db_id'),
         semester: schedule.term.semester,
         year: schedule.term.year,
-        term_number: term,
+        term_number: Number(term),
         failed_courses: Object.keys({
           ...items,
           course_name: false,

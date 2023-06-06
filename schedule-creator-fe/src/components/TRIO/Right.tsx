@@ -36,7 +36,8 @@ const StyledContainer = styled.div`
 `;
 
 const Right = (props: any): JSX.Element => {
-  console.log(props);
+  const [loading, setLoading] = useState(true);
+
   return (
     <StyledContainer>
       {props.plan && props.plan.length > 0 ? (
