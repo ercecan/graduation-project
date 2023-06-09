@@ -1,11 +1,11 @@
-import pymongo
-from bson.objectid import ObjectId
-from models.course import TakenCourse
-from enums.semesters import Semesters
-from enums.grades import Grades
-from models.time import Term
 import os
 
+import pymongo
+from bson.objectid import ObjectId
+from enums.grades import Grades
+from enums.semesters import Semesters
+from models.course import TakenCourse
+from models.time import Term
 
 m_cli = pymongo.MongoClient(os.getenv("MONGO_URI"))
 courses_db = m_cli['schedule-creator']['courses']
@@ -88,8 +88,28 @@ def delete_taken_course_by_id(course_id: str, student_id: str):
 
 def delete_remaining_course_by_id(course_id: str, student_id: str):
     try:
-        st_db.update_one({"_id": ObjectId(student_id)}, {"$pull": {"remaining_courses": course_id}})
+        st_db.update_one({"_id": ObjectId(student_id)}, {"$pull": {"remaining_courses": str(course_id)}})
         return True
+    except Exception as e:
+        print(e)
+        raise e
+    
+def add_new_taken_course(student_id: str, course_id: str, grade: Grades, term: Term):
+    try:
+        taken_course = {
+            "course_id": str(course_id),
+            "grade": grade.value,
+            "term": {
+                "semester": term.semester.value,
+                "year": term.year
+            }
+        }
+
+        arr = st_db.update_one(
+            {"_id": ObjectId(student_id)},
+            {"$push": {"taken_courses": taken_course}}
+        )
+        return
     except Exception as e:
         print(e)
         raise e

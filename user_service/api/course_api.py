@@ -77,7 +77,7 @@ async def add_taken_course(add_taken_course_dto: AddTakenCourseDTO):
     try:
         course = await course_db_service.get_course_by_id(add_taken_course_dto.course_id)
         if course: 
-            await add_new_taken_course(add_taken_course_dto.student_id, course.id, add_taken_course_dto.grade, add_taken_course_dto.term)
+            add_new_taken_course(add_taken_course_dto.student_id, course.id, add_taken_course_dto.grade, add_taken_course_dto.term)
             delete_remaining_course_by_id(course_id=course.id, student_id=add_taken_course_dto.student_id)
     except Exception as e:
         print(e)
