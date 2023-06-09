@@ -15,6 +15,7 @@ from api.course_api import course_router
 from api.school_api import school_router
 from api.opened_course_api import opened_course_router
 from api.status_api import status_router
+from api.transcript_api import transcript_router
 from services.db_service import DBService
 from services.redis_service import RedisService
 from services.publisher_service import Publisher
@@ -53,6 +54,7 @@ async def start_database():
     app.include_router(school_router)
     app.include_router(opened_course_router)
     app.include_router(status_router)
+    app.include_router(transcript_router)
     await DBService.init_database(uri=mongo_uri)
 
 

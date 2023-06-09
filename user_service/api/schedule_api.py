@@ -24,10 +24,10 @@ async def create_schedule(payload: dict):
 
 
 @schedule_router.get("/")
-async def get_schedule(schedule_id: int):
+async def get_schedule(schedule_id):
     '''Given a student id and schedule id, return the schedule for that student'''
     try:
-        schedule = schedule_db_service.get_schedule_by_id(schedule_id)
+        schedule = await schedule_db_service.get_schedule_by_id(schedule_id)
         return schedule
     except Exception as e:
         print(e)

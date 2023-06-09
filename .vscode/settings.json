@@ -3,7 +3,7 @@
   //   "./schedule-creator-common"
   // ],
   "git.ignoreLimitWarning": true,
-  "python.defaultInterpreterPath": "./scheduler_service/venv/bin/python",
+  "python.defaultInterpreterPath": "./recommendation_service/venv/bin/python",
   "python.analysis.extraPaths": [
     "./schedule-creator-common",
     "./scheduler_service",

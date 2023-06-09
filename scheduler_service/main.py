@@ -3,11 +3,6 @@ from dotenv import load_dotenv
 load_dotenv()
 from services.db_service import DBService
 import asyncio
-from utils.schedule_utils import create_preferences, get_ITU_constraints
-from dtos.schedule_dto import ScheduleDto
-from service.scheduler_service import SchedulerService
-from services.schedule_db_service import ScheduleDBService
-from models.time import Term
 import os
 from service.consumer_service import Consumer
 
