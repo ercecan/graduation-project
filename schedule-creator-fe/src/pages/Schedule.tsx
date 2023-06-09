@@ -1,11 +1,25 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { ScheduleView, createTheme } from 'react-schedule-view';
+import ScheduleDetail from '../components/ScheduleDetail';
+import FuturePlan from '../components/FuturePlan';
 import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
-const StyledScheduleView = styled(ScheduleView)`
-  width: 500px;
-  heigth: 400px;
+const StyledContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 800px;
+`;
+
+const StyledText = styled.p`
+  color: #333;
+  font-family: Arial, sans-serif; /* Font family */
+  font-size: 18px; /* Font size */
+  font-weight: bold; /* Font weight */
+  text-decoration: underline; /* Text decoration */
+  text-align: center; /* Text alignment */
+  text-transform: uppercase; /* Text transform */
 `;
 
 function timeStringToFloat(timeString: string): number {
@@ -33,12 +47,21 @@ function getDayIndex(dayName: string): number {
 }
 
 const Schedule = (): JSX.Element => {
+  const [valid, setValid] = useState(true);
+  const [schedule, setSchedule] = useState<{
+    courses: any[];
+  } | null>(null);
+
   const jsonString = sessionStorage.getItem('schedules');
   const schedules = jsonString ? JSON.parse(jsonString) : '';
   const { id } = useParams<{ id: string }>();
-  const schedule = schedules.find(
-    (schedule: { id: string | undefined }) => schedule.id === id,
-  );
+  useEffect(() => {
+    axios
+      .get(`http://0.0.0.0:8000/api/schedule?schedule_id=${id}`)
+      .then((res) => {
+        setSchedule(res.data);
+      });
+  }, []);
 
   const data: {
     name: string;
@@ -71,35 +94,42 @@ const Schedule = (): JSX.Element => {
     },
   ];
 
-  schedule.courses.map((course: any) => {
-    course.time_slot.map((slot: any) => {
-      const day = slot.day;
-      const elem = {
-        startTime: timeStringToFloat(slot.start_time),
-        endTime: timeStringToFloat(slot.end_time),
-        title: course.course.name,
-        description: course.course.description,
-      };
-      data[getDayIndex(day)].events.push(elem);
-    });
-  });
+  const openedCourses: any[] = [];
 
-  const theme = createTheme('apple', {
-    hourHeight: '53px',
-    style: {
-      dayLabels: {
-        fontWeight: 'bold',
-      },
-    },
-  });
+  if (schedule && schedule.courses) {
+    schedule.courses.map((course: any) => {
+      openedCourses.push(course);
+      course.time_slot.map((slot: any) => {
+        const day = slot.day;
+        const elem = {
+          startTime: timeStringToFloat(slot.start_time),
+          endTime: timeStringToFloat(slot.end_time),
+          title: course.course.name,
+          description: course.course.description,
+        };
+        data[getDayIndex(day)].events.push(elem);
+      });
+    });
+  }
 
   return (
-    <StyledScheduleView
-      daySchedules={data}
-      viewStartTime={8}
-      viewEndTime={17}
-      theme={theme}
-    />
+    <StyledContainer>
+      <ScheduleDetail data={data} />
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+        }}
+      >
+        <StyledText>Preferences</StyledText>
+        <StyledText>Fail Scenarios</StyledText>
+        <StyledText>Future Plan</StyledText>
+      </div>
+      {schedule && (
+        <FuturePlan openedCourses={openedCourses} schedule={schedule} />
+      )}
+    </StyledContainer>
   );
 };
 
