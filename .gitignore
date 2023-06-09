@@ -17,3 +17,5 @@ schedule-creator-ms-structure
 */*/node_modules
 .DS_Storenode_modules
 .DS_Store
+.prettierrc
+user_service/package-lock.json

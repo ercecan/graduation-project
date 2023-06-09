@@ -1,7 +1,7 @@
-import React from "react";
-import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-import { StyledCommonContainer } from "../GeneralStyle";
+import React from 'react';
+import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import { StyledCommonContainer } from '../GeneralStyle';
 
 const StyledContainer = styled.div`
   min-height: 100vh;
@@ -21,15 +21,12 @@ const StyledHeader = styled.header`
 const Panel = (): JSX.Element => {
   const navigate = useNavigate();
   const routeLogin = () => {
-    navigate("/");
+    navigate('/');
   };
   return (
     <StyledCommonContainer>
       <StyledContainer>
         <StyledHeader>Welcome to Schedule Creator Website</StyledHeader>
-        {/* Profile - Settings (tc yükle, öğrenci bilgileri)
-        HomePage (Schedule'lar (gözat butonu, sil butonu), Yeni shcedule olıuştur butonu Modal olacak)
-        Schedule_Detail -> 1 schedule için her türlü ayrıntı  */}
       </StyledContainer>
     </StyledCommonContainer>
   );

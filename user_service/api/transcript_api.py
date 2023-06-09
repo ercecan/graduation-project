@@ -1,10 +1,15 @@
 import os
-from fastapi import APIRouter, HTTPException, Response, File, UploadFile
-from models.course import TakenCourse
-from enums.semesters import Semesters
-from enums.grades import Grades
-from models.time import Term
 
+import pymongo
+from bson.objectid import ObjectId
+from enums.grades import Grades
+from enums.semesters import Semesters
+from fastapi import APIRouter, File, HTTPException, Response, UploadFile
+from models.course import TakenCourse
+from models.time import Term
+from utils.remaining_course_utils import (find_remaining_course_ids,
+                                          form_taken_courses,
+                                          get_taken_courses_ids)
 from utils.transcript import extract_courses
 
 transcript_router = APIRouter(
@@ -13,6 +18,11 @@ transcript_router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
+m_cli = pymongo.MongoClient(os.getenv("MONGO_URI"))
+courses_db = m_cli['schedule-creator']['courses']
+tc_db = m_cli['schedule-creator']['taken_courses']
+st_db = m_cli['schedule-creator']['students']
+sc_db = m_cli['schedule-creator']['schools']
 
 @transcript_router.post("/")
 async def upload_and_process_transcript(student_id: str, transcript: UploadFile = File(...)):
@@ -22,40 +32,18 @@ async def upload_and_process_transcript(student_id: str, transcript: UploadFile 
             buffer.write(transcript.file.read())
         # Read lines from the PDF
         courses_by_term = extract_courses(pdf_path=os.path.abspath(fname))
-        taken_courses = []
-        for term in courses_by_term:
-            years = term.split()[0]
-            semester = term.split()[1]
-            year = None
-            if semester == "Bahar":
-                semester = Semesters.SPRING
-                year = int(years.split("-")[1])
-            elif semester == "Güz":
-                semester = Semesters.FALL
-                year = int(years.split("-")[0])
-            elif semester == "Yaz":
-                semester = Semesters.SUMMER
-                year = int(years.split("-")[1])
-            term = Term(year=year, semester=semester)
-            for course in courses_by_term[term]:
-                code = course["code"]
-                name = course["name"] 
-                letter_grade = course["letter_grade"]
-                # get course from code
-                # course dict = {code: course_id}
-                # course_id = course_dict[code]
-                course_id = None
-                tc = TakenCourse(course_id=course_id, grade=Grades[letter_grade], term=term)
-                taken_courses.append(tc)
-                # save taken course into database
-                # await taken_course_db_service.create_taken_course(tc)
-        # bulk insert taken courses to db 
-        # await taken_course_db_service.create_taken_courses(taken_courses)
+        # Create taken courses
+        taken_courses = form_taken_courses(courses_by_term=courses_by_term)
+        # get taken courses ids
+        tcs, taken_ids = get_taken_courses_ids(taken_courses=taken_courses, student_id=student_id)
         
-        # delete the file
+        # find remaining courses
+        remaining_course_ids = find_remaining_course_ids(student_id=student_id, taken_ids=taken_ids)
+        st_db.update_one({'_id': ObjectId(student_id)},{'$set':{'remaining_courses':remaining_course_ids, "taken_courses": tcs}})
+        
+        # Delete the file
         os.remove(os.path.abspath(fname))
 
-    # Upload the file to S3
     except Exception as e:
         print(e)
         raise e

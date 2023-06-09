@@ -1,8 +1,9 @@
-import React, { useState } from "react";
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Select, Space } from "antd";
-import styled from "styled-components";
-import SelectionComponent from "./SelectionComponent";
+import React, { useState } from 'react';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Modal, Select, Space } from 'antd';
+import styled from 'styled-components';
+import SelectionComponent from './SelectionComponent';
+import axios from 'axios';
 
 const StyledForm = styled(Form)`
   display: flex;
@@ -15,24 +16,77 @@ const StyledForm = styled(Form)`
   }
 `;
 
-const onFinish = (values: any) => {
-  console.log("Received values of form:", values);
-};
-
-const App: React.FC = () => {
+const CreateScheduleComponent = (): JSX.Element => {
   const [currentFilled, setCurrentFilled] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [scheduleName, setScheduleName] = useState('');
+  const [preferences, setPreferences] = useState();
+
+  const handleFormSubmit = (values: any) => {
+    setPreferences(values.preferences);
+    if (scheduleName === '') {
+      setModalVisible(true);
+    } else {
+      submitForm();
+    }
+  };
+
+  const submitForm = () => {
+    axios
+      .post('http://0.0.0.0:8000/api/schedule/', {
+        message: 'create schedule',
+        semester: 'spring',
+        year: 2023,
+        school_name: 'Istanbul Technical University',
+        major: 'Computer Engineering',
+        preferences: preferences,
+        _id: sessionStorage.getItem('student_db_id'),
+        schedule_name: scheduleName,
+      })
+      .then((res) => {
+        // Handle response and any success logic
+      })
+      .catch((error) => {
+        // Handle error
+      });
+  };
+
+  const handleModalOk = () => {
+    setModalVisible(false);
+    submitForm();
+  };
+
+  const handleModalCancel = () => {
+    setModalVisible(false);
+  };
+
+  const handleFieldRemoved = (b: boolean) => {
+    setCurrentFilled(b);
+  };
 
   return (
     <StyledForm
       name="dynamic_form_nest_item"
-      onFinish={onFinish}
-      style={{ maxWidth: 620, minWidth: 600, flexDirection: "column" }}
+      onFinish={handleFormSubmit}
+      style={{ maxWidth: 620, minWidth: 600, flexDirection: 'column' }}
       autoComplete="off"
     >
-      <Form.List name="users">
+      <Modal
+        title="Enter Schedule Name"
+        visible={modalVisible}
+        onOk={handleModalOk}
+        onCancel={handleModalCancel}
+      >
+        <Input
+          value={scheduleName}
+          onChange={(e) => setScheduleName(e.target.value)}
+          placeholder="Enter schedule name"
+        />
+      </Modal>
+      <Form.List name="preferences">
         {(fields, { add, remove }) => {
           if (fields.length === 0) {
-            setCurrentFilled(true);
+            handleFieldRemoved(true);
           }
           return (
             <>
@@ -42,7 +96,7 @@ const App: React.FC = () => {
                   name={name}
                   restField={restField}
                   remove={remove}
-                  setCurrentFilled={setCurrentFilled}
+                  onFieldRemoved={handleFieldRemoved}
                 />
               ))}
               <Form.Item>
@@ -50,7 +104,7 @@ const App: React.FC = () => {
                   type="dashed"
                   onClick={() => {
                     add();
-                    setCurrentFilled(false);
+                    handleFieldRemoved(false);
                   }}
                   block
                   disabled={!currentFilled}
@@ -72,4 +126,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default CreateScheduleComponent;

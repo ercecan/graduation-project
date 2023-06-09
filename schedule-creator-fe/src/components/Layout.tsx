@@ -1,6 +1,6 @@
 import React, { ReactNode, useMemo, useState } from 'react';
 import {
-  FileOutlined,
+  BookOutlined,
   PieChartOutlined,
   UserOutlined,
 } from '@ant-design/icons';
@@ -43,6 +43,7 @@ interface NavigationMap {
 const navigationMap: NavigationMap = {
   '1': '/home',
   '2': '/profile',
+  '3': '/courses',
   // "3": '/schedule/1',
   // "4": '/schedule/2',
   // "5": '/schedule/3',
@@ -67,7 +68,7 @@ const MyLayout = (props: LayoutProps) => {
     return [
       createMenuItem('Home Page', '1', <PieChartOutlined />),
       createMenuItem('Profile & Settings', '2', <UserOutlined />),
-      createMenuItem('Schedules', 'sub1', <FileOutlined />, menuItems),
+      createMenuItem('My Courses', '3', <BookOutlined />),
     ];
   }, []);
 
@@ -76,7 +77,7 @@ const MyLayout = (props: LayoutProps) => {
       <Sider
         collapsible
         collapsed={collapsed}
-        onCollapse={value => setCollapsed(value)}
+        onCollapse={(value) => setCollapsed(value)}
       >
         <div style={{ margin: '16px 0' }}>
           <Image src={logo} width={50} height={50} preview={false} />
@@ -89,15 +90,13 @@ const MyLayout = (props: LayoutProps) => {
           defaultSelectedKeys={['1']}
           mode="inline"
           items={items}
-          onClick={event => navigate(navigationMap[event.key].toString())}
+          onClick={(event) => navigate(navigationMap[event.key].toString())}
         />
       </Sider>
       <Layout className="site-layout">
         <Content style={{ margin: '0 16px' }}>
           <Breadcrumb style={{ margin: '16px 0' }}></Breadcrumb>
-          <div style={{ padding: 24, background: colorBgContainer }}>
-            {props.children}
-          </div>
+          <div style={{ background: colorBgContainer }}>{props.children}</div>
         </Content>
         <Footer style={{ textAlign: 'center' }}>
           ITU Scheduler ©2023 Created by ITU

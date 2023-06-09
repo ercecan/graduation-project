@@ -24,8 +24,17 @@ def extract_courses(pdf_path):
         course = {'code': '', 'name': '', 'letter_grade': ''}
        
         if re.match(term_pattern, line):
-             # start term
-            term = line
+            # start term
+            term = line.split(' ')[0] + ' ' + line.split()[1]
+            term = term.replace('Bahar', 'spring')
+            term = term.replace('Güz', 'fall')
+            term = term.replace('Yaz', 'summer')
+            sem = term.split()[1]
+            if sem == 'fall':
+                term = term[0:4] + ' ' + term.split()[1]
+            else:
+                term = term[5:9] + ' ' + term.split()[1]
+            #term = line
             courses_by_term[term] = []
         
         if line == '(Comment)':
@@ -48,7 +57,7 @@ def extract_courses(pdf_path):
         
     return courses_by_term
 
-# Example usage
+#Example usage
 # pdf_path = '/Users/erce/Desktop/ITU/Graduation Project/graduation-project/user_service/1syf_Transkript.pdf'
 
 # extracted_courses = extract_courses(pdf_path)
