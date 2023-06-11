@@ -23,14 +23,12 @@ spec:
           ports:
             - containerPort: 8001
           resources:
-          # You must specify requests for CPU to autoscale
-          # based on CPU utilization
-          requests:
-            cpu: "1000m"
-            memory: "2Gi"
-          limits:
-            cpu: "3000m"
-            memory: "6Gi"
+            requests:
+              cpu: "1000m"
+              memory: "2Gi"
+            limits:
+              cpu: "3000m"
+              memory: "6Gi"
 
 ---
 apiVersion: v1
