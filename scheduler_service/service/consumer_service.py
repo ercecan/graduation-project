@@ -107,21 +107,21 @@ class Consumer:
             create_schedule_dto = createScheduleDto
             term = Term(year=create_schedule_dto['year'], semester=create_schedule_dto['semester'])
             preferences = create_preferences(create_schedule_dto['preferences'])
-            print('Preferences are created')
             #print(preferences)
+            
             student = await schedule_service.create_student_dto(create_schedule_dto["_id"])
-            print('student dto is created')
             #print(student)
+            print("created student")
             base_schedules = await schedule_service.create_base_schedules(student, term, create_schedule_dto["_id"])
-            print('base schedules are created')
             #print(base_schedules)
+            print("created base schedules")
             scored_schedules = await schedule_service.score_base_schedules(base_schedules, preferences=preferences)
             print('base schedules are scored')
             best_schedules = schedule_service.select_best_five_schedules(scored_schedules)
             print('best schedules are selected')
             response = await schedule_service.create_schedule_objects(student_id=create_schedule_dto['_id'], base_schedules=best_schedules, term=term, preferences=create_schedule_dto["preferences"], schedule_name=create_schedule_dto["schedule_name"])
-            print('schedule objects are created')
             #print(response)
+            print('finished creating schedule')
         except Exception as e:
             print(e)
             raise e
