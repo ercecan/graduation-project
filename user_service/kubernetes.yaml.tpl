@@ -15,13 +15,20 @@ spec:
         app: user
     spec:
       nodeSelector:
-        cloud.google.com/gke-nodepool: "default-pool"
+        cloud.google.com/gke-nodepool: "production-pool"
       containers:
         - name: user
           image: europe-west3-docker.pkg.dev/GOOGLE_CLOUD_PROJECT/grad/user:COMMIT_SHA
           env:
           ports:
             - containerPort: 8000
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+            limits:
+              cpu: "1500m"
+              memory: "2Gi"
 
 ---
 apiVersion: v1
