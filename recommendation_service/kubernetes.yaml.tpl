@@ -15,13 +15,20 @@ spec:
         app: recommendation
     spec:
       nodeSelector:
-        cloud.google.com/gke-nodepool: "default-pool"
+        cloud.google.com/gke-nodepool: "production-pool"
       containers:
         - name: recommendation
           image: europe-west3-docker.pkg.dev/GOOGLE_CLOUD_PROJECT/grad/recommendation:COMMIT_SHA
           env:
           ports:
             - containerPort: 8002
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+            limits:
+              cpu: "2000m"
+              memory: "4Gi"
 
 ---
 apiVersion: v1
