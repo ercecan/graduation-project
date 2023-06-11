@@ -45,3 +45,20 @@ metadata:
 data:
   RABBITMQ_HOST: rabbitmq
   REDIS_HOST: redis
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grad-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: user-svc-static
+  labels:
+    app: user
+spec:
+  defaultBackend:
+    service:
+      name: user
+      port:
+        number: 8000
