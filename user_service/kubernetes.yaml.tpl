@@ -29,13 +29,14 @@ kind: Service
 metadata:
   name: user
 spec:
-  type: LoadBalancer
   selector:
     app: user
   ports:
     - protocol: TCP
       port: 8000
       targetPort: 8000
+  type: LoadBalancer
+  loadBalancerIP: 34.107.96.1
 
 ---
 apiVersion: v1
