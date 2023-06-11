@@ -47,6 +47,8 @@ class SchedulerService:
                         if prereq == taken_course.course.code and taken_course.grade <= Grades.DD:
                             remaining_courses.append(str(course.id))
         opened_courses = await self.opened_course_db_service.get_opened_courses_by_course_ids(remaining_courses, term)
+        # sort so that the courses that have the same code as students major are at the top
+        opened_courses.sort(key=lambda x: x.course.code[0:3] in student_dto.major[0].code, reverse=True)
         domains = {}
         for variable in opened_courses:
             domains[variable] = [True, False]
