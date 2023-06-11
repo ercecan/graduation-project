@@ -5,7 +5,7 @@ metadata:
   labels:
     app: scheduler
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: scheduler
@@ -15,7 +15,7 @@ spec:
         app: scheduler
     spec:
       nodeSelector:
-        cloud.google.com/gke-nodepool: "default-pool"
+        cloud.google.com/gke-nodepool: "production-pool"
       containers:
         - name: scheduler
           image: europe-west3-docker.pkg.dev/GOOGLE_CLOUD_PROJECT/grad/scheduler:COMMIT_SHA
@@ -27,8 +27,8 @@ spec:
               cpu: "1000m"
               memory: "2Gi"
             limits:
-              cpu: "3000m"
-              memory: "6Gi"
+              cpu: "2000m"
+              memory: "4Gi"
 
 ---
 apiVersion: v1
