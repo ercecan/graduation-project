@@ -83,9 +83,10 @@ class Consumer:
             
             message = json_response['message']
             if message == 'create schedule':
+                schedule_name = json_response['schedule_name']
                 user_id = json_response['_id']
                 type_='schedule'
-                r_key = f"{type_}:{user_id}"
+                r_key = f"{type_}:{schedule_name}:{user_id}"
                 r.set_val(key=r_key,val='creating')     
                 print('creating schedule')
                 await Consumer.test_create_schedule(json_response)

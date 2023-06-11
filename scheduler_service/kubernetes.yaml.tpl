@@ -5,7 +5,7 @@ metadata:
   labels:
     app: scheduler
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: scheduler
@@ -22,6 +22,15 @@ spec:
           env:
           ports:
             - containerPort: 8001
+          resources:
+          # You must specify requests for CPU to autoscale
+          # based on CPU utilization
+          requests:
+            cpu: "1000m"
+            memory: "2Gi"
+          limits:
+            cpu: "3000m"
+            memory: "6Gi"
 
 ---
 apiVersion: v1
