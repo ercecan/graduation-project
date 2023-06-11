@@ -30,7 +30,6 @@ metadata:
   name: user
 spec:
   type: LoadBalancer
-  loadBalancerIP: 34.107.96.1
   selector:
     app: user
   ports:
