@@ -22,7 +22,7 @@ class Consumer:
         self.consume_queue_name = queue_name
         self.host = os.environ.get('RABBITMQ_HOST', 'rabbitmq')
         #self.connection_parameters=pika.ConnectionParameters(host=os.environ.get('RABBITMQ_HOST', 'rabbitmq'))
-        print(os.getenv('RABBITMQ_HOST'))
+        print(f"This is host: {os.getenv('RABBITMQ_HOST')}")
         self.connection = None
         self.channel = None
         self.consume_queue = None
@@ -34,8 +34,11 @@ class Consumer:
         try:
             queue_name = "scheduler"
             username = os.getenv('RABBITMQ_USERNAME')
+            print(f'this is username: {username}')
             password = os.getenv('RABBITMQ_PASSWORD')
+            print(f'this is password: {password}')
             connection = await aio_pika.connect_robust( host=self.host, login=username, password=password)
+            print('got connection')
             async with connection:
                 # Creating channel
                 channel = await connection.channel()
@@ -73,27 +76,25 @@ class Consumer:
     @staticmethod   
     async def process_incoming_message(msg, headers):
         try:
-            
-            """Processing incoming message from RabbitMQ"""
             print('consumed message, processing message')
-            
+            r_key = None
             json_response = msg
-            # process the message here
             print(json_response)
-            # create schedule
-            type_='schedule'
-            r_key = f"{type_}"
-            r.set_val(key=r_key,val='creating')            
-            print(json_response)
+            
             message = json_response['message']
             if message == 'create schedule':
-                # create schedule ########
-
+                user_id = json_response['_id']
+                type_='schedule'
+                r_key = f"{type_}:{user_id}"
+                r.set_val(key=r_key,val='creating')     
                 print('creating schedule')
-                #await Consumer.test_create_schedule(json_response)
-            # schedule completed, update status
-            r.set_val(key=r_key,val='completed')
+                await Consumer.test_create_schedule(json_response)
+                print('schedule created')
+                # schedule completed, update status
+                r.set_val(key=r_key,val='completed')
         except Exception as e:
+            if r_key:
+                r.set_val(key=r_key,val='error')
             print(e)
 
     @staticmethod

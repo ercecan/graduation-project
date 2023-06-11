@@ -6,7 +6,6 @@ import asyncio
 import os
 from service.consumer_service import Consumer
 
-# from service.consumer_service import Consumer
 
 async def init(uri: str):
     await DBService.init_database(uri=uri)
@@ -14,7 +13,7 @@ async def init(uri: str):
     await consumer.consume()
 
 if __name__ == '__main__':
-    # uvicorn.run('app:app', host="0.0.0.0", port=8003, reload=True)
     uri = os.getenv('MONGO_URI')
+    print(f'this is the uri: {uri}')
     asyncio.run(init(uri=uri))
     
