@@ -71,9 +71,11 @@ const Courses = (): JSX.Element => {
   };
 
   const handleDelete = (itemID: string) => {
-    axios.delete(`http://0.0.0.0:8000/api/course/taken?
-                  student_id=${sessionStorage.getItem('student_db_id')}
-                  &course_id=${itemID}`);
+    axios.delete(
+      `http://0.0.0.0:8000/api/course/taken?student_id=${sessionStorage.getItem(
+        'student_db_id',
+      )}&course_id=${itemID}`,
+    );
     fetchItems();
   };
 

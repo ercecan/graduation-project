@@ -34,7 +34,6 @@ const ProfilePage = () => {
         surname: values.surname,
         student_id: values.studentId,
         year: values.year,
-        tc: transcriptData,
       })
       .then((res) => {
         //
@@ -115,7 +114,7 @@ const ProfilePage = () => {
       <Row gutter={24}>
         <Col span={12}>
           <Form.Item label="Transcript">
-            <UploadTranscript setTranscriptData={setTranscriptData} />
+            <UploadTranscript />
           </Form.Item>
         </Col>
       </Row>

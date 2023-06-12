@@ -62,7 +62,6 @@ async def update_user(payload: dict):
     surname = payload["surname"] if payload["surname"] else ""
     student_id = payload["student_id"] if payload["student_id"] else ""
     year = payload["year"] if payload["year"] else ""
-    tc = payload["tc"] if payload["tc"] else []
     student_db_id = payload["student_db_id"]
 
     if not email:
@@ -73,13 +72,7 @@ async def update_user(payload: dict):
     student.surname = surname if surname else student.surname
     student.student_id = student_id if student_id else student.student_id
     student.year = year if year else student.year
-    for (semester, courses) in payload["tc"].items():
-        year, sem = term_solver(semester)
-        for course in courses:
-            fetched = await course_db_service.get_course_by_code(course_code=course['code'])
-            if fetched is not None:
-                taken_course = TakenCourse(course_id=str(fetched.id), grade=Grades[course['letter_grade']], term=Term(year=int(year), semester=sem))
-                student.taken_courses.append(taken_course)
+
             
     await student_db_service.update_student(student=student, student_id=student_db_id)
-    return web.Response(status=200, text="User updated successfully")
+    return student

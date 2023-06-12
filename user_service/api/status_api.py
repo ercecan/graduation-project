@@ -1,7 +1,6 @@
 from fastapi import APIRouter, HTTPException, Response
 from services.redis_service import RedisService
 
-
 status_router = APIRouter(
     prefix="/api/status",
     tags=["Status"],
@@ -12,9 +11,9 @@ r = RedisService()
 
 
 @status_router.get("/")
-async def status_check(id: str, type: str):
+async def status_check(id: str, type: str, name: str):
     try:
-        r_key = f"{type}:{id}"
+        r_key = f"{type}:{name}:{id}"
         status = r.get_val(r_key)
         return Response(status_code=200, content=status)
     except Exception as e:

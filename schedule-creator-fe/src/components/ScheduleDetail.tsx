@@ -16,7 +16,6 @@ const ScheduleDetail = (props: any): JSX.Element => {
       },
     },
   });
-
   return (
     <StyledScheduleView
       daySchedules={props.data}

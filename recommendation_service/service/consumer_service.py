@@ -43,16 +43,17 @@ class Consumer:
 
                 async with queue.iterator() as queue_iter:
                     async for message in queue_iter:
-                        async with message.process():
+                        async with message.process(ignore_processed=True):
                             json_body = json.loads(message.body)
+                            await message.ack()
                             headers = message.headers
                             type = json_body['message']
                             if type == 'create recommendation':
                                 await Consumer.process_incoming_message(msg=json_body, headers=headers)
 
 
-                            if 'kill' in message.body.decode():
-                                break
+                            # if 'kill' in message.body.decode():
+                            #     break
         except ConnectionClosedByBroker as e:
             print(e)
             raise e
@@ -75,7 +76,9 @@ class Consumer:
             print(json_response)
             # create schedule
             type_='recommendation'
-            r_key = f"{type_}"
+            student_id = json_response['student_id']
+            schedule_name = json_response['schedule_name'].strip()
+            r_key = f"{type_}:{schedule_name}:{student_id}"
             r.set_val(key=r_key,val='creating')            
 
             message = json_response['message']
@@ -92,5 +95,6 @@ class Consumer:
                 r.set_val(key=r_key,val='completed')
         except Exception as e:
             print(e)
+            r.set_val(key=r_key,val='failed')
 
 
