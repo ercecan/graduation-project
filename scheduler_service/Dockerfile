@@ -17,11 +17,12 @@ WORKDIR /app
 # Copy requirements from host, to docker container in /app
 ADD ./requirements.txt /app/requirements.txt
 RUN pip install -r requirements.txt
-
-# Copy everything from current directory to /app in the container
-ADD . /app
 RUN pip install $COMMON_URL
 RUN pip uninstall --yes bson
 RUN pip uninstall --yes pymongo
 RUN pip install pymongo
+
+# Copy everything from current directory to /app in the container
+ADD . /app
+
 CMD ["python", "main.py"]
