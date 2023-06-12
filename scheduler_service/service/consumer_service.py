@@ -79,7 +79,9 @@ class Consumer:
             print(json_response)
             # create schedule
             type_='schedule'
-            r_key = f"{type_}"
+            student_id = json_response['_id']
+            schedule_name = json_response['schedule_name']
+            r_key = f"{type_}:{schedule_name}:{student_id}"
             r.set_val(key=r_key,val='creating')            
             print(json_response)
             message = json_response['message']
