@@ -16,25 +16,53 @@ sc_db = m_cli['schedule-creator']['schools']
 
 def form_taken_courses(courses_by_term:dict, ):
     taken_courses = []
+    all_codes = []
+    code_grade = {}
     for term in courses_by_term:
         year: str = term.split()[0]
         sem: str = term.split()[1]
         semester = Semesters[sem.upper()]
         term = Term(year=year, semester=semester)
         codes = []
-        code_grade = {}
+        
+        
         term_hash = f'{term.year} {term.semester.value}'
         for course in courses_by_term[term_hash]:
+            
             code = course["code"]
+            if code == 'ATA 101':
+                code = 'ATA 121'
+            elif code == 'ATA 102':
+                code = 'ATA 122'
+            elif code == 'TUR 102':
+                code = 'TUR 122' 
+            elif code == 'ING 112':
+                code = 'ING 112A' 
+            elif code == 'TUR 101':
+                code = 'TUR 121' 
+            elif code == 'ING 201':
+                code = 'ING 201A' 
+            elif code == 'MAT 210E':
+                code = 'BLG 210E' 
+            elif code == 'DAN 101':
+                code = 'DAN 102'
+            elif code == 'DAN 301':
+                continue
+            
             name = course["name"] 
             letter_grade = course["letter_grade"]
             if letter_grade == '-':
                 print(f"Course {code} has no grade")
                 continue
             codes.append(code)
+            
             code_grade[code] = letter_grade
-
-        courses = courses_db.find({"code": {"$in": codes}})
+            all_codes.append(code)
+        if 'ING 100' not in all_codes:
+            all_codes.append('ING 100')
+            code_grade['ING 100'] = 'AA'
+            codes.append('ING 100')
+        courses = list(courses_db.find({"code": {"$in": codes}}))
         course_dict = {}
         
         for course in courses:
@@ -116,7 +144,13 @@ def add_new_taken_course(student_id: str, course_id: str, grade: Grades, term: T
 
 def update_taken_course_by_id( student_id: str, course_id: str, grade: str, term):
     try:
-        st_db.update_one({"_id": ObjectId(student_id), "taken_courses.course_id": course_id}, {"$set": {"taken_courses.$.grade": grade, "taken_courses.$.term": term}})
+        print(term['semester'].value, term['year'])
+        
+        st_db.update_one({"_id": ObjectId(student_id), "taken_courses.course_id": course_id}, 
+                         {"$set": 
+                          {"taken_courses.$.grade": grade.value, 
+                           "taken_courses.$.term.semester": term['semester'].value, 
+                           "taken_courses.$.term.year": term['year']}})
         return True
     except Exception as e:
         print(e)
