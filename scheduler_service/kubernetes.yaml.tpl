@@ -24,11 +24,11 @@ spec:
             - containerPort: 8001
           resources:
             requests:
-              cpu: "1000m"
-              memory: "2Gi"
+              cpu: "500m"
+              memory: "1Gi"
             limits:
-              cpu: "2000m"
-              memory: "4Gi"
+              cpu: "1200m"
+              memory: "2Gi"
 
 ---
 apiVersion: v1

@@ -1,6 +1,7 @@
 import os
 import pika
 import aio_pika
+from aio_pika.exceptions import MessageProcessError
 import json
 from pika.exceptions import ConnectionClosedByBroker, AMQPChannelError, AMQPConnectionError
 from services.redis_service import RedisService
@@ -54,15 +55,19 @@ class Consumer:
 
                 async with queue.iterator() as queue_iter:
                     async for message in queue_iter:
-                        async with message.process():
-                            json_body = json.loads(message.body)
-                            headers = message.headers
-                            type = json_body['message']
-                            if type == 'create schedule':
-                                await Consumer.process_incoming_message(msg=json_body, headers=headers)
+                        async with message.process(ignore_processed=True):
+                            try:
+                                json_body = json.loads(message.body)
+                                await message.ack()
+                                headers = message.headers
+                                type = json_body['message']
+                                if type == 'create schedule':
+                                    await Consumer.process_incoming_message(msg=json_body, headers=headers)
 
-                            if queue.name in message.body.decode():
-                                break
+                                if queue.name in message.body.decode():
+                                    break
+                            except MessageProcessError:
+                                continue
         except ConnectionClosedByBroker as e:
             print(e)
             raise e
@@ -71,6 +76,7 @@ class Consumer:
             self.connection.close()
             self.consume()
         except Exception as e:
+            print(e)
             raise e
         
     @staticmethod   
