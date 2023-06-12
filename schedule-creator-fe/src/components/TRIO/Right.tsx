@@ -1,8 +1,10 @@
+import { Spin } from 'antd';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import LoadingSpinner from '../common/LoadingSpinner';
 
 const StyledContainer = styled.div`
-  width: 100%;
+  width: 600px;
   padding: 20px;
   overflow-y: auto;
   .schedule-item {
@@ -40,7 +42,9 @@ const Right = (props: any): JSX.Element => {
 
   return (
     <StyledContainer>
-      {props.plan && props.plan.length > 0 ? (
+      {props.loading ? (
+        <LoadingSpinner />
+      ) : props.plan && props.plan.length > 0 ? (
         props.plan.map((planItem: any, index: any) => (
           <div className="schedule-item" key={index}>
             <h2>

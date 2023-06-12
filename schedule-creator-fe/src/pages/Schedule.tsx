@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import ScheduleDetail from '../components/ScheduleDetail';
 import FuturePlan from '../components/FuturePlan';
@@ -51,17 +51,19 @@ const Schedule = (): JSX.Element => {
   const [schedule, setSchedule] = useState<{
     courses: any[];
   } | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const jsonString = sessionStorage.getItem('schedules');
   const schedules = jsonString ? JSON.parse(jsonString) : '';
   const { id } = useParams<{ id: string }>();
+
   useEffect(() => {
     axios
       .get(`http://0.0.0.0:8000/api/schedule?schedule_id=${id}`)
       .then((res) => {
         setSchedule(res.data);
       });
-  }, []);
+  }, [loading]);
 
   const data: {
     name: string;
@@ -94,6 +96,35 @@ const Schedule = (): JSX.Element => {
     },
   ];
 
+  useEffect(() => {
+    if (loading) {
+      const intervalId = setInterval(() => {
+        // console.log('finish', finish);
+        // if (finish) return;
+        axios
+          .get(
+            `http://0.0.0.0:8000/api/status?type=recommendation&id=${sessionStorage.getItem(
+              'student_db_id',
+            )}&name=${sessionStorage.getItem('sch_name')}`,
+          )
+          .then((res) => {
+            console.log(res.data);
+            if (
+              res.data === 'completed' ||
+              res.data === null ||
+              res.data === ''
+            ) {
+              clearInterval(intervalId);
+              setLoading(false);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }, 3000);
+    }
+  });
+
   const openedCourses: any[] = [];
 
   if (schedule && schedule.courses) {
@@ -105,7 +136,10 @@ const Schedule = (): JSX.Element => {
           startTime: timeStringToFloat(slot.start_time),
           endTime: timeStringToFloat(slot.end_time),
           title: course.course.name,
-          description: course.course.description,
+          description:
+            course.course.description.length > 150
+              ? course.course.description.substring(0, 150) + '...'
+              : course.course.description,
         };
         data[getDayIndex(day)].events.push(elem);
       });
@@ -122,12 +156,17 @@ const Schedule = (): JSX.Element => {
           justifyContent: 'space-around',
         }}
       >
-        <StyledText>Preferences</StyledText>
-        <StyledText>Fail Scenarios</StyledText>
-        <StyledText>Future Plan</StyledText>
+        <StyledText style={{ marginLeft: 120 }}>Preferences</StyledText>
+        <StyledText style={{ marginLeft: 260 }}>Fail Scenarios</StyledText>
+        <StyledText style={{ marginLeft: 100 }}>Future Plan</StyledText>
       </div>
       {schedule && (
-        <FuturePlan openedCourses={openedCourses} schedule={schedule} />
+        <FuturePlan
+          openedCourses={openedCourses}
+          schedule={schedule}
+          loading={loading}
+          setLoading={setLoading}
+        />
       )}
     </StyledContainer>
   );

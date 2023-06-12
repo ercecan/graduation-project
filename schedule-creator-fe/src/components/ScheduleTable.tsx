@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Modal, Space, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import CreateScheduleComponent from './CreateScheduleComponent';
 import styled from 'styled-components';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import LoadingSpinner from './common/LoadingSpinner';
 
 const Container = styled.div`
   display: flex;
@@ -16,9 +17,42 @@ const Container = styled.div`
   }
 `;
 
+// const data: DataType[] = [
+//   {
+//     date: new Date('Mon May 29 2023 16:26:49 GMT+0300 (GMT+03:00)'),
+//     id: '6474a8193ec517cb55eb21c5',
+//     key: '0',
+//     name: 'Robotics and Dance',
+//     preferences: ['Time Preference', 'Day Preference'],
+//   },
+//   {
+//     date: new Date('Mon May 23 2023 16:22:44 GMT+0300 (GMT+03:00)'),
+//     id: '6474a8193ec517cb55eb21c5',
+//     key: '1',
+//     name: 'Extreme Cryptography',
+//     preferences: ['Day Preference', 'Campus Preference'],
+//   },
+//   {
+//     date: new Date('Mon May 27 2023 23:22:49 GMT+0300 (GMT+03:00)'),
+//     id: '6474a8193ec517cb55eb21c5',
+//     key: '2',
+//     name: 'Advanced Theoretical Physics',
+//     preferences: ['Campus Preference', 'Language Preference'],
+//   },
+//   {
+//     date: new Date('Mon May 21 2023 18:31:41 GMT+0300 (GMT+03:00)'),
+//     id: '6474a8193ec517cb55eb21c5',
+//     key: '2',
+//     name: 'Quantum Mechanics at Dawn',
+//     preferences: ['Time Preference', 'Language Preference'],
+//   },
+// ];
+
 const preferenceColors: { [key: string]: string } = {
-  'Time Preference': 'green',
-  'Day Preference': 'geekblue',
+  'Time Preference': 'purple',
+  'Day Preference': 'teal',
+  'Campus Preference': 'magenta',
+  'Language Preference': 'gold',
   // Add more preferences and their corresponding colors as needed
 };
 
@@ -36,7 +70,7 @@ interface DataType {
 
 const ScheduleTable = () => {
   const [scheduleData, setScheduleData] = useState<DataType[]>();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [showSuccessNotification, setShowSuccessNotification] = useState(false);
 
   const navigate = useNavigate();
@@ -132,10 +166,10 @@ const ScheduleTable = () => {
               name: data.name,
               date: new Date(data.time),
               preferences: data.preferences.map(
-                (pref: any) =>
-                  pref.type.charAt(0).toUpperCase() +
-                  pref.type.slice(1) +
-                  ' Preference',
+                (pref: any, idx: number) =>
+                  (idx === 1
+                    ? pref.type.charAt(0).toUpperCase() + pref.type.slice(1)
+                    : 'TIME') + ' Preference',
               ),
             } as DataType;
           }),
@@ -144,37 +178,71 @@ const ScheduleTable = () => {
       .then(() => setLoading(false));
   }, [showSuccessNotification]);
 
-  const handleTimeOut = () => {
-    setShowSuccessNotification(false);
-  };
+  useEffect(() => {
+    if (loading) {
+      const intervalId = setInterval(() => {
+        // console.log('finish', finish);
+        // if (finish) return;
+        axios
+          .get(
+            `http://0.0.0.0:8000/api/status?type=schedule&id=${sessionStorage.getItem(
+              'student_db_id',
+            )}&name=${sessionStorage.getItem('sch_name')}`,
+          )
+          .then((res) => {
+            console.log(res.data);
+            if (
+              res.data === 'completed' ||
+              res.data === null ||
+              res.data === ''
+            ) {
+              clearInterval(intervalId);
+              setLoading(false);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }, 3000);
+    }
+  }, [loading]);
 
   return (
-    <Container>
-      <CreateScheduleComponent />
-      {showSuccessNotification && (
-        <div
-          style={{
-            backgroundColor: 'blue',
-            color: 'white',
-            padding: '10px',
-            borderRadius: '5px',
-            textAlign: 'center',
-            width: '150px',
-            marginLeft: 'auto',
-            marginRight: 'auto',
-          }}
-        >
-          Schedule Deleted
-        </div>
-      )}{' '}
-      <Table
-        columns={columns}
-        pagination={{ pageSize: 5 }}
-        dataSource={scheduleData}
-        loading={loading}
-        style={{ display: 'flex', width: '100%' }}
-      />
-    </Container>
+    <div>
+      {!loading ? (
+        <Container>
+          <CreateScheduleComponent setLoading={setLoading} />
+          {showSuccessNotification && (
+            <div
+              style={{
+                backgroundColor: 'blue',
+                color: 'white',
+                padding: '10px',
+                borderRadius: '5px',
+                textAlign: 'center',
+                width: '150px',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+              }}
+            >
+              Schedule Deleted
+            </div>
+          )}
+          <Table
+            columns={columns}
+            pagination={{ pageSize: 5 }}
+            dataSource={scheduleData}
+            loading={loading}
+            style={{ display: 'flex', width: '100%' }}
+          />
+        </Container>
+      ) : (
+        <LoadingSpinner
+          style={{ width: 200 }}
+          text={'Your Schedule is Creating...'}
+        />
+      )}
+    </div>
   );
 };
 

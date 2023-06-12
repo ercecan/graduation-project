@@ -4,7 +4,7 @@ import { Button, message, Upload } from 'antd';
 import axios from 'axios';
 import type { RcFile, UploadFile } from 'antd/es/upload/interface';
 
-const UploadTranscript = (props: any) => {
+const UploadTranscript = () => {
   const beforeUpload = (file: any) => {
     if (file.type !== 'application/pdf') {
       message.error('Only PDF files are allowed');
