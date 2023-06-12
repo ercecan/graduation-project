@@ -1,18 +1,19 @@
-from models.student import Student
-from models.course import Course, TakenCourse, FuturePlan
 from typing import List
-from models.schedule import Schedule
-from enums.semesters import Semesters
+
+from dtos.course_dto import TakenCourseDto
 from dtos.student_dto import StudentSearchDto
-from services.csp_service import CSP
+from enums.grades import Grades
+from enums.semesters import Semesters
+from models.course import Course, FuturePlan, TakenCourse
+from models.schedule import Schedule
+from models.student import Student
+from models.time import Term
 from services.course_db_service import CourseDBService
+from services.csp_service import CSP
+from services.opened_course_db_service import OpenedCourseDBService
 from services.schedule_db_service import ScheduleDBService
 from services.student_db_service import StudentDBService
-from services.opened_course_db_service import OpenedCourseDBService
 from utils.semester_util import next_semester
-from enums.grades import Grades
-from models.time import Term
-from dtos.course_dto import TakenCourseDto
 
 
 class RecommendationService:
@@ -69,6 +70,7 @@ class RecommendationService:
             next_semester_courses = [course for course in courses if course.semester.value == semester_next or course.semester.value == Semesters.FALL_AND_SPRING.value or course.semester.value == Semesters.ALL.value]
             if len(next_semester_courses) == 0:
                 break
+            
             min_semester = min([course.recommended_semester for course in next_semester_courses]) + 2
             next_semester_courses = list(filter(lambda course: course.recommended_semester <= min_semester, next_semester_courses))
             domains = {}
@@ -79,10 +81,15 @@ class RecommendationService:
             for c in self.constraints:
                 csp_service.add_constraint(c)
             csp_service.backtracking_search(student=student)
+
             first_schedule = csp_service.get_all_possible_schedules()[0]
+
             taken_course_ids = [str(course.id) for course in first_schedule[0]]
-            taken_courses = [TakenCourse(course_id=course, grade=Grades.CC, term=Term(year=year, semester=semester_next)) for course in taken_course_ids]
+
+            taken_courses = [TakenCourseDto(course=course, grade=Grades.CC, term=Term(year=year, semester=semester_next)) for course in first_schedule[0]]
+            
             student.taken_courses.extend(taken_courses)
+            
             student.remaining_courses = [course for course in student.remaining_courses if course not in taken_course_ids]
 
             future_plan.append(FuturePlan(term=Term(year=year, semester=semester_next), course_ids=taken_course_ids))

@@ -1,18 +1,20 @@
-from services.opened_course_db_service import OpenedCourseDBService
-from services.student_db_service import StudentDBService
-from services.csp_service import CSP
-from services.schedule_db_service import ScheduleDBService
-from services.school_db_service import SchoolDBService
-from models.preferences import Preference
-from models.schedule import Schedule
-from typing import List, Any
-from dtos.student_dto import StudentSearchDto
-from dtos.schedule_dto import ScheduleDto
-from service.preference_scorer import PreferenceScorer
-from models.time import Term
-from enums.grades import Grades
 import asyncio
 from datetime import datetime
+from typing import Any, List
+
+from dtos.schedule_dto import ScheduleDto
+from dtos.student_dto import StudentSearchDto
+from enums.grades import Grades
+from models.preferences import Preference
+from models.schedule import Schedule
+from models.time import Term
+from service.preference_scorer import PreferenceScorer
+from services.csp_service import CSP
+from services.opened_course_db_service import OpenedCourseDBService
+from services.schedule_db_service import ScheduleDBService
+from services.school_db_service import SchoolDBService
+from services.student_db_service import StudentDBService
+
 
 class SchedulerService:
 
@@ -50,6 +52,7 @@ class SchedulerService:
         # sort so that the courses that have the same code as students major are at the top
         opened_courses.sort(key=lambda x: x.course.code[0:3] in student_dto.major[0].code, reverse=True)
         domains = {}
+        
         for variable in opened_courses:
             domains[variable] = [True, False]
         csp_service = CSP(variables=opened_courses, domains=domains)

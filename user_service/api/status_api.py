@@ -1,7 +1,6 @@
 from fastapi import APIRouter, HTTPException, Response
 from services.redis_service import RedisService
 
-
 status_router = APIRouter(
     prefix="/api/status",
     tags=["Status"],

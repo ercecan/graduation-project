@@ -1,17 +1,18 @@
-import os
-import pika
-import aio_pika
+import asyncio
 import json
-from pika.exceptions import ConnectionClosedByBroker, AMQPChannelError, AMQPConnectionError
-from services.redis_service import RedisService
-from utils.schedule_utils import create_preferences, get_ITU_constraints
+import os
+
+import aio_pika
+import pika
 from dtos.schedule_dto import ScheduleDto
+from models.time import Term
+from pika.exceptions import (AMQPChannelError, AMQPConnectionError,
+                             ConnectionClosedByBroker)
 from service.scheduler_service import SchedulerService
+from services.redis_service import RedisService
 from services.schedule_db_service import ScheduleDBService
 from services.school_db_service import SchoolDBService
-from models.time import Term
-import asyncio
-
+from utils.schedule_utils import create_preferences, get_ITU_constraints
 
 r = RedisService()
 
@@ -47,8 +48,9 @@ class Consumer:
 
                 async with queue.iterator() as queue_iter:
                     async for message in queue_iter:
-                        async with message.process():
+                        async with message.process(ignore_processed=True):
                             json_body = json.loads(message.body)
+                            await message.ack()
                             headers = message.headers
                             type = json_body['message']
                             if type == 'create schedule':
@@ -80,38 +82,44 @@ class Consumer:
             # create schedule
             type_='schedule'
             student_id = json_response['_id']
-            schedule_name = json_response['schedule_name']
+            schedule_name = json_response['schedule_name'].strip()
             r_key = f"{type_}:{schedule_name}:{student_id}"
             r.set_val(key=r_key,val='creating')            
-            print(json_response)
             message = json_response['message']
             if message == 'create schedule':
                 # create schedule ########
                 await Consumer.test_create_schedule(json_response)
             # schedule completed, update status
             r.set_val(key=r_key,val='completed')
+
+        except KeyboardInterrupt:
+            print('keyboard interrupt')
+            if r_key:
+                r.set_val(key=r_key,val='error')
+
         except Exception as e:
             print(e)
 
     @staticmethod
     async def test_create_schedule(createScheduleDto):
         try:
-            print("creating schedule")
+            # print("creating schedule")
             major_plan = await SchoolDBService().get_major_plan_by_name(school_name=createScheduleDto['school_name'], major_plan_name=createScheduleDto['major'])
             schedule_service = SchedulerService(get_ITU_constraints(), major_plan)
             create_schedule_dto = createScheduleDto
             term = Term(year=create_schedule_dto['year'], semester=create_schedule_dto['semester'])
+            # print("preferences")
             preferences = create_preferences(create_schedule_dto['preferences'])
-            #print(preferences)
             
+            # print("student")
             student = await schedule_service.create_student_dto(create_schedule_dto["_id"])
-            #print(student)
-            print("created student")
+            # print("base_schedules")
             base_schedules = await schedule_service.create_base_schedules(student, term, create_schedule_dto["_id"])
-            #print(base_schedules)
-            print("created base schedules")
+            # print("score_schedules")
             scored_schedules = await schedule_service.score_base_schedules(base_schedules, preferences=preferences)
+            # print("best_schedules")
             best_schedules = schedule_service.select_best_five_schedules(scored_schedules)
+            # print("res")
             response = await schedule_service.create_schedule_objects(student_id=create_schedule_dto['_id'], base_schedules=best_schedules, term=term, preferences=create_schedule_dto["preferences"], schedule_name=create_schedule_dto["schedule_name"])
             #print(response)
             print('finished creating schedule')

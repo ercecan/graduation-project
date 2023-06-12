@@ -24,7 +24,6 @@ const StyledForm = styled.form`
 const Mid = (props: any): JSX.Element => {
   const [items, setItems] = useState({});
   const [term, setTerm] = useState<string | undefined>(undefined);
-
   const handleChange = (event: any) => {
     setItems({
       ...items,
@@ -47,6 +46,7 @@ const Mid = (props: any): JSX.Element => {
         schedule_id: schedule.id,
         student_id: sessionStorage.getItem('student_db_id'),
         semester: schedule.term.semester,
+        schedule_name: schedule.name,
         year: schedule.term.year,
         term_number: Number(term),
         failed_courses: Object.keys({
@@ -58,7 +58,9 @@ const Mid = (props: any): JSX.Element => {
           .map((name) => name_to_id.get(name)),
       })
       .then((res) => {
-        console.log(res);
+        if (res.status === 200) {
+          props.setLoading(true);
+        }
       });
   };
 

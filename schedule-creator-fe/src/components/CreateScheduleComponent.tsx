@@ -16,14 +16,22 @@ const StyledForm = styled(Form)`
   }
 `;
 
-const CreateScheduleComponent = (): JSX.Element => {
+const CreateScheduleComponent = (props: any): JSX.Element => {
   const [currentFilled, setCurrentFilled] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [scheduleName, setScheduleName] = useState('');
   const [preferences, setPreferences] = useState();
 
   const handleFormSubmit = (values: any) => {
-    setPreferences(values.preferences);
+    const formatted = values.preferences.map((preference: any) => {
+      return {
+        type: preference.first.split(' ')[0],
+        value: preference.second,
+        priority: Number(preference.third),
+      };
+    });
+
+    setPreferences(formatted);
     if (scheduleName === '') {
       setModalVisible(true);
     } else {
@@ -44,7 +52,7 @@ const CreateScheduleComponent = (): JSX.Element => {
         schedule_name: scheduleName,
       })
       .then((res) => {
-        // Handle response and any success logic
+        props.setLoading(true);
       })
       .catch((error) => {
         // Handle error
@@ -79,7 +87,10 @@ const CreateScheduleComponent = (): JSX.Element => {
       >
         <Input
           value={scheduleName}
-          onChange={(e) => setScheduleName(e.target.value)}
+          onChange={(e) => {
+            setScheduleName(e.target.value);
+            sessionStorage.setItem('sch_name', e.target.value);
+          }}
           placeholder="Enter schedule name"
         />
       </Modal>
