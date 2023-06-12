@@ -26,9 +26,6 @@ spec:
             requests:
               cpu: "500m"
               memory: "1Gi"
-            limits:
-              cpu: "1500m"
-              memory: "2Gi"
 
 ---
 apiVersion: v1
@@ -53,3 +50,18 @@ metadata:
 data:
   RABBITMQ_HOST: rabbitmq
   REDIS_HOST: redis
+
+---
+
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: user
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: user
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 50
