@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import { Button, Col, Form, Input, Row, Select } from "antd";
-import { useNavigate } from "react-router-dom";
-import logo from "../icon.png";
-import axios from "axios";
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import { Button, Col, Form, Input, Row, Select } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import logo from '../icon.png';
+import axios from 'axios';
 
 const StyledErrorMessage = styled.div``;
 const StyledImage = styled.img`
@@ -26,7 +26,7 @@ const SignupCard = (): JSX.Element => {
   const [valid, setValid] = useState(true);
   const [counter, setCounter] = useState(0);
   const navigate = useNavigate();
-  const url = "http://localhost:8000/api/student/register";
+  const url = 'http://34.107.96.1:8000/api/student/register';
 
   const onFinish = async (values: any) => {
     console.log(values);
@@ -34,14 +34,14 @@ const SignupCard = (): JSX.Element => {
     console.log(response);
     if (response.status === 200) {
       setValid(true);
-      navigate("/home");
+      navigate('/home');
     } else {
       setValid(false);
     }
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
+    console.log('Failed:', errorInfo);
   };
 
   return (
@@ -64,14 +64,14 @@ const SignupCard = (): JSX.Element => {
             <Form.Item
               label="Name"
               name="name"
-              rules={[{ required: true, message: "Please input your name!" }]}
+              rules={[{ required: true, message: 'Please input your name!' }]}
             >
               <Input />
             </Form.Item>
             <Form.Item
               label="Surname"
               name="surname"
-              rules={[{ required: true, message: "Please input your name!" }]}
+              rules={[{ required: true, message: 'Please input your name!' }]}
             >
               <Input />
             </Form.Item>
@@ -79,7 +79,7 @@ const SignupCard = (): JSX.Element => {
               label="Student ID"
               name="student_id"
               rules={[
-                { required: true, message: "Please input your student id!" },
+                { required: true, message: 'Please input your student id!' },
               ]}
             >
               <Input />
@@ -87,7 +87,7 @@ const SignupCard = (): JSX.Element => {
             <Form.Item
               label="Email"
               name="email"
-              rules={[{ required: true, message: "Please input your email!" }]}
+              rules={[{ required: true, message: 'Please input your email!' }]}
             >
               <Input />
             </Form.Item>
@@ -95,7 +95,7 @@ const SignupCard = (): JSX.Element => {
               label="Password"
               name="password"
               rules={[
-                { required: true, message: "Please input your password!" },
+                { required: true, message: 'Please input your password!' },
               ]}
             >
               <Input.Password />
@@ -105,7 +105,7 @@ const SignupCard = (): JSX.Element => {
               label="School"
               name="school"
               rules={[
-                { required: true, message: "Please input your password!" },
+                { required: true, message: 'Please input your password!' },
               ]}
             >
               <Input />
@@ -114,7 +114,7 @@ const SignupCard = (): JSX.Element => {
               label="Year"
               name="year"
               rules={[
-                { required: true, message: "Please input your password!" },
+                { required: true, message: 'Please input your password!' },
               ]}
             >
               <Input />
@@ -123,7 +123,7 @@ const SignupCard = (): JSX.Element => {
               label="GPA"
               name="gpa"
               rules={[
-                { required: true, message: "Please input your password!" },
+                { required: true, message: 'Please input your password!' },
               ]}
             >
               <Input />
@@ -137,36 +137,36 @@ const SignupCard = (): JSX.Element => {
                     <div key={field.key}>
                       <Form.Item
                         {...field}
-                        name={[field.name, "name"]}
+                        name={[field.name, 'name']}
                         rules={[
-                          { required: true, message: "Please enter a name" },
+                          { required: true, message: 'Please enter a name' },
                         ]}
                       >
                         <Input placeholder="Name" />
                       </Form.Item>
                       <Form.Item
                         {...field}
-                        name={[field.name, "code"]}
+                        name={[field.name, 'code']}
                         rules={[
-                          { required: true, message: "Please enter a code" },
+                          { required: true, message: 'Please enter a code' },
                         ]}
                       >
                         <Input placeholder="Code" />
                       </Form.Item>
                       <Form.Item
                         {...field}
-                        name={[field.name, "language"]}
+                        name={[field.name, 'language']}
                         rules={[
                           {
                             required: true,
-                            message: "Please enter a language",
+                            message: 'Please enter a language',
                           },
                         ]}
                       >
                         <Input placeholder="Language" />
                       </Form.Item>
                       <Button
-                        style={{ marginRight: "10px" }}
+                        style={{ marginRight: '10px' }}
                         type="dashed"
                         onClick={() => {
                           remove(field.name);

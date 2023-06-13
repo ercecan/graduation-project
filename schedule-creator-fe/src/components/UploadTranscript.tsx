@@ -18,7 +18,7 @@ const UploadTranscript = () => {
     console.log(file);
     formData.append('transcript', file.file.originFileObj);
     axios.post(
-      'http://localhost:8000/api/transcript?student_id=' +
+      'http://34.107.96.1:8000/api/transcript?student_id=' +
         sessionStorage.getItem('student_db_id'),
       formData,
       {

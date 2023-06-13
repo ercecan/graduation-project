@@ -28,7 +28,7 @@ const StyledContainer = styled.div`
 const LoginCard = (): JSX.Element => {
   const [valid, setValid] = useState(true);
   const navigate = useNavigate();
-  const url = 'http://localhost:8000/api/student/login';
+  const url = 'http://34.107.96.1:8000/api/student/login';
 
   const onFinish = async (values: any) => {
     const response = await axios.post(url, values);
