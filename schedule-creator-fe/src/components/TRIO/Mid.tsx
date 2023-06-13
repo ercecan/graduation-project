@@ -41,7 +41,7 @@ const Mid = (props: any): JSX.Element => {
     event.preventDefault();
 
     axios
-      .post('http://0.0.0.0:8000/api/recommendation', {
+      .post('http://34.107.96.1:8000/api/recommendation', {
         message: 'create recommendation',
         schedule_id: schedule.id,
         student_id: sessionStorage.getItem('student_db_id'),

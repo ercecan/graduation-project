@@ -59,7 +59,7 @@ const Schedule = (): JSX.Element => {
 
   useEffect(() => {
     axios
-      .get(`http://0.0.0.0:8000/api/schedule?schedule_id=${id}`)
+      .get(`http://34.107.96.1:8000/api/schedule?schedule_id=${id}`)
       .then((res) => {
         setSchedule(res.data);
       });
@@ -99,11 +99,9 @@ const Schedule = (): JSX.Element => {
   useEffect(() => {
     if (loading) {
       const intervalId = setInterval(() => {
-        // console.log('finish', finish);
-        // if (finish) return;
         axios
           .get(
-            `http://0.0.0.0:8000/api/status?type=recommendation&id=${sessionStorage.getItem(
+            `http://34.107.96.1:8000/api/status?type=recommendation&id=${sessionStorage.getItem(
               'student_db_id',
             )}&name=${sessionStorage.getItem('sch_name')}`,
           )

@@ -31,7 +31,7 @@ const Courses = (): JSX.Element => {
   const fetchItems = () =>
     axios
       .post(
-        'http://0.0.0.0:8000/api/student/taken?student_id=' +
+        'http://34.107.96.1:8000/api/student/taken?student_id=' +
           sessionStorage.getItem('student_db_id'),
       )
       .then((res) => {
@@ -72,7 +72,7 @@ const Courses = (): JSX.Element => {
 
   const handleDelete = (itemID: string) => {
     axios.delete(
-      `http://0.0.0.0:8000/api/course/taken?student_id=${sessionStorage.getItem(
+      `http://34.107.96.1:8000/api/course/taken?student_id=${sessionStorage.getItem(
         'student_db_id',
       )}&course_id=${itemID}`,
     );

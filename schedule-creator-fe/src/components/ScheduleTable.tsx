@@ -71,6 +71,7 @@ interface DataType {
 const ScheduleTable = () => {
   const [scheduleData, setScheduleData] = useState<DataType[]>();
   const [loading, setLoading] = useState(false);
+  const [loading2, setLoading2] = useState(false);
   const [showSuccessNotification, setShowSuccessNotification] = useState(false);
 
   const navigate = useNavigate();
@@ -81,7 +82,7 @@ const ScheduleTable = () => {
 
   const handleDeleteClick = (id: string) => {
     axios
-      .delete('http://0.0.0.0:8000/api/schedule/delete/' + id)
+      .delete('http://34.107.96.1:8000/api/schedule/delete/' + id)
       .then(async (res) => {
         if (res.status === 200) {
           setShowSuccessNotification(true);
@@ -152,7 +153,7 @@ const ScheduleTable = () => {
   const student_id = sessionStorage.getItem('student_db_id');
   useEffect(() => {
     axios
-      .post('http://0.0.0.0:8000/api/schedule/all', {
+      .post('http://34.107.96.1:8000/api/schedule/all', {
         student_id: student_id,
         term: { semester: 'fall', year: 2023 },
       })
@@ -176,16 +177,14 @@ const ScheduleTable = () => {
         );
       })
       .then(() => setLoading(false));
-  }, [showSuccessNotification]);
+  }, [showSuccessNotification, loading2]);
 
   useEffect(() => {
-    if (loading) {
+    if (loading2) {
       const intervalId = setInterval(() => {
-        // console.log('finish', finish);
-        // if (finish) return;
         axios
           .get(
-            `http://0.0.0.0:8000/api/status?type=schedule&id=${sessionStorage.getItem(
+            `http://34.107.96.1:8000/api/status?type=schedule&id=${sessionStorage.getItem(
               'student_db_id',
             )}&name=${sessionStorage.getItem('sch_name')}`,
           )
@@ -197,7 +196,7 @@ const ScheduleTable = () => {
               res.data === ''
             ) {
               clearInterval(intervalId);
-              setLoading(false);
+              setLoading2(false);
             }
           })
           .catch((error) => {
@@ -205,13 +204,13 @@ const ScheduleTable = () => {
           });
       }, 3000);
     }
-  }, [loading]);
+  }, [loading2]);
 
   return (
     <div>
-      {!loading ? (
+      {!loading2 ? (
         <Container>
-          <CreateScheduleComponent setLoading={setLoading} />
+          <CreateScheduleComponent setLoading={setLoading2} />
           {showSuccessNotification && (
             <div
               style={{

@@ -41,7 +41,7 @@ const CreateScheduleComponent = (props: any): JSX.Element => {
 
   const submitForm = () => {
     axios
-      .post('http://0.0.0.0:8000/api/schedule/', {
+      .post('http://34.107.96.1:8000/api/schedule/', {
         message: 'create schedule',
         semester: 'spring',
         year: 2023,

@@ -27,7 +27,7 @@ const ProfilePage = () => {
   const handleSubmit = (values: any) => {
     console.log(transcriptData);
     axios
-      .post('http://0.0.0.0:8000/api/student/update', {
+      .post('http://34.107.96.1:8000/api/student/update', {
         student_db_id: sessionStorage.getItem('student_db_id'),
         email: sessionStorage.getItem('email'),
         name: values.name,

@@ -65,7 +65,7 @@ const ModalComponent = (props: any): JSX.Element => {
 
   const addRequest = () => {
     axios
-      .post('http://0.0.0.0:8000/api/course/update/taken', updateData)
+      .post('http://34.107.96.1:8000/api/course/update/taken', updateData)
       .then(() => {
         console.log('Success');
       });
@@ -74,7 +74,7 @@ const ModalComponent = (props: any): JSX.Element => {
   useEffect(() => {
     axios
       .get(
-        `http://0.0.0.0:8000/api/course/remaining?student_id=` +
+        `http://34.107.96.1:8000/api/course/remaining?student_id=` +
           sessionStorage.getItem('student_db_id'),
       )
       .then((res) => {
@@ -85,7 +85,7 @@ const ModalComponent = (props: any): JSX.Element => {
   const handleUpdateModalSave = () => {
     if (!(gradeRef.current && yearRef.current && semesterRef.current)) return;
     axios
-      .post('http://0.0.0.0:8000/api/course/update/taken', {
+      .post('http://34.107.96.1:8000/api/course/update/taken', {
         student_id: sessionStorage.getItem('student_db_id') || '',
         course_id: props.modalData.id,
         grade: gradeRef.current.value,
@@ -103,7 +103,7 @@ const ModalComponent = (props: any): JSX.Element => {
   const handleAddModalSave = () => {
     if (!(gradeRef.current && yearRef.current && semesterRef.current)) return;
     axios
-      .post('http://0.0.0.0:8000/api/course/add/taken', {
+      .post('http://34.107.96.1:8000/api/course/add/taken', {
         student_id: sessionStorage.getItem('student_db_id') || '',
         course_id: selected,
         grade: gradeRef.current.value,
